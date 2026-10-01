@@ -1057,195 +1057,15 @@ h1 span{color:#07583f!important}
     <p class="lead">Daftar nama dan jabatan pegawai KUA Cipeundeuy.</p>
   </div>
   <div id="adminBadge" class="admin-badge">
-    <span>Mode Admin aktif — kelola foto pegawai dan pengumuman kehendak nikah.<small style="display:block;margin-top:3px;color:#8a742d">Foto pegawai: format 4×6 berdiri (rasio 2:3).</small></span>
+    <span>Mode Admin aktif — kelola data pegawai, foto, dan pengumuman kehendak nikah.<small style="display:block;margin-top:3px;color:#8a742d">Foto pegawai: JPG, PNG, atau WebP maksimal 500 KB.</small><span id="adminSignedEmail" class="admin-email-pill"></span></span>
     <span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+      <button class="admin-manage-btn primary" type="button" onclick="openEmployeeManager()">Kelola Pegawai</button>
       <button class="admin-manage-btn primary" type="button" onclick="openAnnouncementManager()">Kelola Pengumuman</button>
       <button type="button" onclick="logoutAdmin()">Keluar Admin</button>
     </span>
   </div>
-  <div class="employee-grid">
-    <article class="card employee-card" data-employee-id="emp1" data-employee-name="DEDE SURYADI, S.H.I">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp1">D</div>
-        <div class="employee-info">
-          <h3>DEDE SURYADI, S.H.I</h3>
-          <p>Penghulu Ahli Madya</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp1')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp1" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp1')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp2" data-employee-name="NULHAKIM">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp2">N</div>
-        <div class="employee-info">
-          <h3>NULHAKIM</h3>
-          <p>Pengadministrasi Sarana dan Prasarana</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp2')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp2" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp2')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp3" data-employee-name="ZAENAL MUKAROM, S.H.I">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp3">Z</div>
-        <div class="employee-info">
-          <h3>ZAENAL MUKAROM, S.H.I</h3>
-          <p>Ahli Pertama – Penghulu</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp3')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp3" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp3')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp4" data-employee-name="MUHERDI, S.Sos.I">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp4">M</div>
-        <div class="employee-info">
-          <h3>MUHERDI, S.Sos.I</h3>
-          <p>Penyuluh Agama Ahli Pertama</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp4')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp4" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp4')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp5" data-employee-name="AA MISBAHUDIN, S.Sy">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp5">A</div>
-        <div class="employee-info">
-          <h3>AA MISBAHUDIN, S.Sy</h3>
-          <p>Penyuluh Agama Ahli Pertama</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp5')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp5" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp5')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp6" data-employee-name="MIFTAKHUL LATY YULI ISFORO, S.H">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp6">M</div>
-        <div class="employee-info">
-          <h3>MIFTAKHUL LATY YULI ISFORO, S.H</h3>
-          <p>Penyuluh Agama Ahli Pertama</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp6')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp6" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp6')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp7" data-employee-name="ROSIM SAEPUDIN, S.Pd.I">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp7">R</div>
-        <div class="employee-info">
-          <h3>ROSIM SAEPUDIN, S.Pd.I</h3>
-          <p>Penyuluh Agama Ahli Pertama</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp7')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp7" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp7')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp8" data-employee-name="SURYANA, S.Pd.I">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp8">S</div>
-        <div class="employee-info">
-          <h3>SURYANA, S.Pd.I</h3>
-          <p>Penata Layanan Operasional</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp8')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp8" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp8')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp9" data-employee-name="MASTUROH, S.Pd">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp9">M</div>
-        <div class="employee-info">
-          <h3>MASTUROH, S.Pd</h3>
-          <p>Pengadministrasi Perkantoran</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp9')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp9" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp9')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp10" data-employee-name="AI INAYAH">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp10">A</div>
-        <div class="employee-info">
-          <h3>AI INAYAH</h3>
-          <p>Pengadministrasi Perkantoran</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp10')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp10" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp10')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp11" data-employee-name="ADE IRMAN TAUFIK">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp11">A</div>
-        <div class="employee-info">
-          <h3>ADE IRMAN TAUFIK</h3>
-          <p>Pengadministrasi Perkantoran</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp11')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp11" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp11')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp12" data-employee-name="RUSDIANA">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp12">R</div>
-        <div class="employee-info">
-          <h3>RUSDIANA</h3>
-          <p>Pengadministrasi Perkantoran</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp12')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp12" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp12')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp13" data-employee-name="UDIN SAEPUDIN">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp13">U</div>
-        <div class="employee-info">
-          <h3>UDIN SAEPUDIN</h3>
-          <p>Pengelola Umum Operasional</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp13')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp13" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp13')">
-      </div>
-    </article>
-    <article class="card employee-card" data-employee-id="emp14" data-employee-name="ABDUL FATAH">
-      <div class="employee-main">
-        <div class="employee-avatar" data-avatar="emp14">A</div>
-        <div class="employee-info">
-          <h3>ABDUL FATAH</h3>
-          <p>Pengadministrasi Perkantoran</p>
-        </div>
-      </div>
-      <div class="photo-actions">
-        <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('emp14')" title="Upload foto 4x6">Upload Foto 4×6</button>
-        <input class="photo-upload-input" id="photo-emp14" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'emp14')">
-      </div>
-    </article>
+  <div class="employee-grid" id="employeeGrid">
+    <div class="photo-limit" style="grid-column:1/-1;text-align:center">Memuat data pegawai…</div>
   </div>
 </section>
 
@@ -1319,6 +1139,8 @@ const NIKAH_SEED=[];
 /* ===== SUPABASE ===== */
 const SUPABASE_URL='https://bhzvrnsiwpjmzawpmecd.supabase.co';
 const SUPABASE_KEY='sb_publishable_n3_gjXav2imhEnCGFK1mQw_zSLWiDKS';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const EMPLOYEE_BUCKET='pegawai-kua';
 
 async function loadNikahData(){
   try{
@@ -1505,10 +1327,7 @@ function showPage(id){
 }
 
 /* ===== ADMIN FOTO PEGAWAI ===== */
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'KUA-Cipeundeuy-2026';
 const ADMIN_SESSION_KEY = 'kua_cipeundeuy_admin_session';
-const PHOTO_KEY_PREFIX = 'kua_cipeundeuy_employee_photo_';
 
 let nikahDraftSuami='', nikahDraftIstri='';
 function requireAdmin(){
@@ -1696,9 +1515,7 @@ async function loginAdmin(){
   }
 
   try{
-    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-    const {data,error}=await client.auth.signInWithPassword({
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
       email:email,
       password:password
     });
@@ -1716,6 +1533,8 @@ async function loginAdmin(){
 
     setAdminSession(true);
     document.body.classList.add('admin-mode');
+    const emailBadge=document.getElementById('adminSignedEmail');
+    if(emailBadge) emailBadge.textContent=data.user.email||email;
     document.getElementById('adminBadge')?.classList.add('show');
 
     if(err) err.textContent='';
@@ -1731,63 +1550,193 @@ async function loginAdmin(){
     return false;
   }
 }
-function logoutAdmin(){
+async function logoutAdmin(){
+  try{ await supabaseClient.auth.signOut(); }catch(e){ console.warn('Supabase signOut:',e); }
   closeAnnouncementManager();
+  closeEmployeeManager();
   setAdminSession(false);
   document.body.classList.remove('admin-mode');
   document.getElementById('adminBadge')?.classList.remove('show');
+  const emailBadge=document.getElementById('adminSignedEmail');
+  if(emailBadge) emailBadge.textContent='';
+}
+function employeeEsc(v){
+  return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function employeeInitial(n){const s=String(n||'P').trim();return s?s.charAt(0).toUpperCase():'P';}
+let employeeData=[];
+let employeeEditId='';
+
+async function loadEmployees(){
+  const box=document.getElementById('employeeGrid');
+  if(!box)return;
+  box.innerHTML='<div class="photo-limit" style="grid-column:1/-1;text-align:center">Memuat data pegawai…</div>';
+  try{
+    const {data,error}=await supabaseClient.from('pegawai_kua').select('*').order('urutan',{ascending:true}).order('nama',{ascending:true});
+    if(error) throw error;
+    employeeData=Array.isArray(data)?data:[];
+    renderEmployees();
+  }catch(e){
+    console.error('Load pegawai:',e);
+    box.innerHTML='<div class="photo-limit bad" style="grid-column:1/-1;text-align:center">Data pegawai belum dapat dimuat. Silakan muat ulang halaman.</div>';
+  }
+}
+function renderEmployees(){
+  const box=document.getElementById('employeeGrid'); if(!box)return;
+  const visibleEmployees=employeeData.filter(x=>x.aktif!==false);
+  if(!visibleEmployees.length){
+    box.innerHTML='<div class="photo-limit" style="grid-column:1/-1;text-align:center">Belum ada data pegawai aktif.</div>';
+    return;
+  }
+  const admin=adminSessionIsActive();
+  box.innerHTML=visibleEmployees.map(x=>{
+    const id=employeeEsc(x.id), name=employeeEsc(x.nama||''), jab=employeeEsc(x.jabatan||'');
+    const avatar=x.foto_url
+      ? `<div class="employee-avatar photo" data-avatar="${id}"><img src="${employeeEsc(x.foto_url)}" alt="Foto ${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;"></div>`
+      : `<div class="employee-avatar" data-avatar="${id}">${employeeInitial(x.nama)}</div>`;
+    const actions=admin?`<div class="photo-actions" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('${id}')">Ganti Foto</button>
+      <button class="photo-upload-btn" type="button" onclick="editEmployee('${id}')">Edit</button>
+      <button class="photo-upload-btn danger" type="button" onclick="deleteEmployee('${id}')">Hapus</button>
+      <input class="photo-upload-input" id="photo-${id}" type="file" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event,'${id}')">
+    </div>`:'';
+    return `<article class="card employee-card" data-employee-id="${id}">
+      <div class="employee-main">${avatar}<div class="employee-info"><h3>${name}</h3><p>${jab}</p></div></div>${actions}
+    </article>`;
+  }).join('');
+}
+function openEmployeeManager(){
+  if(!requireAdmin()) return;
+  renderEmployeeAdminList();
+  document.getElementById('employeeAdminModal')?.classList.add('show');
+}
+function closeEmployeeManager(){document.getElementById('employeeAdminModal')?.classList.remove('show');}
+function resetEmployeeForm(){
+  employeeEditId='';
+  const ids=['employeeEditId','employeeEditNama','employeeEditJabatan','employeeEditNip','employeeEditJenjang','employeeEditUrutan'];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const active=document.getElementById('employeeEditAktif'); if(active)active.checked=true;
+  const file=document.getElementById('employeeEditFoto'); if(file)file.value='';
+  const err=document.getElementById('employeeAdminError'); if(err){err.textContent='';err.className='admin-error';}
+}
+function editEmployee(id){
+  if(!requireAdmin())return;
+  const x=employeeData.find(v=>v.id===id);if(!x)return;
+  employeeEditId=id;
+  document.getElementById('employeeEditNama').value=x.nama||'';
+  document.getElementById('employeeEditJabatan').value=x.jabatan||'';
+  document.getElementById('employeeEditNip').value=x.nip||'';
+  document.getElementById('employeeEditJenjang').value=x.jenjang||'';
+  document.getElementById('employeeEditUrutan').value=x.urutan??'';
+  document.getElementById('employeeEditAktif').checked=x.aktif!==false;
+  document.getElementById('employeeEditFoto').value='';
+  document.getElementById('employeeEditModal')?.classList.add('show');
+}
+async function addEmployee(){
+  if(!requireAdmin())return;
+  employeeEditId='';
+  resetEmployeeForm();
+  document.getElementById('employeeEditModal')?.classList.add('show');
+}
+function closeEmployeeEdit(){document.getElementById('employeeEditModal')?.classList.remove('show');}
+async function saveEmployee(){
+  if(!requireAdmin())return;
+  const err=document.getElementById('employeeAdminError');
+  const nama=document.getElementById('employeeEditNama').value.trim();
+  const jabatan=document.getElementById('employeeEditJabatan').value.trim();
+  const nip=document.getElementById('employeeEditNip').value.trim();
+  const jenjang=document.getElementById('employeeEditJenjang').value.trim();
+  const urutan=parseInt(document.getElementById('employeeEditUrutan').value,10);
+  const aktif=document.getElementById('employeeEditAktif').checked;
+  const file=document.getElementById('employeeEditFoto').files?.[0]||null;
+  if(!nama||!jabatan){err.textContent='Nama dan jabatan wajib diisi.';return;}
+  err.className='admin-error';err.textContent='Menyimpan…';
+  try{
+    let id=employeeEditId||('emp-'+Date.now());
+    const oldUrl=employeeEditId?(employeeData.find(v=>v.id===employeeEditId)?.foto_url||''):'';
+    let foto_url=oldUrl;
+    if(file) foto_url=await uploadEmployeePhoto(id,file);
+    const payload={id,nama,jabatan,nip,jenjang,foto_url,aktif,urutan:Number.isFinite(urutan)?urutan:(employeeEditId?(employeeData.find(v=>v.id===employeeEditId)?.urutan||0):(employeeData.length+1)),updated_at:new Date().toISOString()};
+    const {error}=await supabaseClient.from('pegawai_kua').upsert(payload,{onConflict:'id'});
+    if(error)throw error;
+    if(file && oldUrl)await removeEmployeePhotoByUrl(oldUrl);
+    await loadEmployees();
+    renderEmployeeAdminList();
+    closeEmployeeEdit();
+  }catch(e){
+    console.error('Simpan pegawai:',e);
+    err.textContent='Data belum berhasil disimpan: '+(e.message||'terjadi kesalahan.');
+  }
+}
+async function uploadEmployeePhoto(id,file){
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Gunakan foto JPG, PNG, atau WebP.');
+  if(file.size>500*1024)throw new Error('Foto pegawai maksimal 500 KB.');
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const path=`${id}-${Date.now()}.${ext}`;
+  const {error}=await supabaseClient.storage.from(EMPLOYEE_BUCKET).upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw error;
+  const {data}=supabaseClient.storage.from(EMPLOYEE_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+async function removeEmployeePhotoByUrl(url){
+  const marker='/storage/v1/object/public/'+EMPLOYEE_BUCKET+'/';
+  const idx=String(url||'').indexOf(marker);if(idx<0)return;
+  const path=decodeURIComponent(String(url).slice(idx+marker.length));
+  if(path)await supabaseClient.storage.from(EMPLOYEE_BUCKET).remove([path]);
+}
+async function deleteEmployee(id){
+  if(!requireAdmin())return;
+  const x=employeeData.find(v=>v.id===id);if(!x)return;
+  if(!confirm('Hapus data pegawai '+(x.nama||'ini')+'?'))return;
+  try{
+    if(x.foto_url)await removeEmployeePhotoByUrl(x.foto_url);
+    const {error}=await supabaseClient.from('pegawai_kua').delete().eq('id',id);
+    if(error)throw error;
+    await loadEmployees();renderEmployeeAdminList();
+  }catch(e){alert('Data belum dapat dihapus: '+(e.message||'terjadi kesalahan.'));}
 }
 function triggerPhotoUpload(id){
-  if(!adminSessionIsActive()){
-    openAdminLogin(); return;
-  }
+  if(!requireAdmin())return;
   document.getElementById('photo-'+id)?.click();
 }
-function handlePhotoUpload(event,id){
-  const file=event.target.files?.[0];
-  if(!file) return;
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){
-    alert('Gunakan foto JPG, PNG, atau WEBP.'); event.target.value=''; return;
-  }
-  if(file.size>500*1024){
-    alert('Foto pegawai maksimal 500 KB. Silakan pilih foto yang lebih kecil.'); event.target.value=''; return;
-  }
-  const reader=new FileReader();
-  reader.onload=function(){
-    const data=reader.result;
-    try{
-      localStorage.setItem(PHOTO_KEY_PREFIX+id,data);
-      applyEmployeePhoto(id,data);
-    }catch(e){
-      alert('Foto belum dapat disimpan di browser. Gunakan foto JPG/WEBP yang lebih kecil dari 500 KB.');
-    }
-  };
-  reader.readAsDataURL(file);
+async function handlePhotoUpload(event,id){
+  const file=event.target.files?.[0];if(!file)return;
+  try{
+    const x=employeeData.find(v=>v.id===id);if(!x)throw new Error('Data pegawai tidak ditemukan.');
+    const oldUrl=x.foto_url||'';
+    const foto_url=await uploadEmployeePhoto(id,file);
+    const {error}=await supabaseClient.from('pegawai_kua').update({foto_url,updated_at:new Date().toISOString()}).eq('id',id);
+    if(error)throw error;
+    if(oldUrl)await removeEmployeePhotoByUrl(oldUrl);
+    await loadEmployees();renderEmployeeAdminList();
+  }catch(e){alert('Foto belum berhasil disimpan: '+(e.message||'terjadi kesalahan.'));}
   event.target.value='';
 }
-function applyEmployeePhoto(id,data){
-  const avatar=document.querySelector('[data-avatar="'+id+'"]');
-  if(!avatar) return;
-  avatar.classList.add('photo');
-  avatar.innerHTML='';
-  const img=document.createElement('img');
-  img.src=data;
-  img.alt='Foto pegawai';
-  img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
-  avatar.appendChild(img);
+function renderEmployeeAdminList(){
+  const box=document.getElementById('employeeAdminList');if(!box)return;
+  if(!employeeData.length){box.innerHTML='<div class="photo-limit">Belum ada data pegawai.</div>';return;}
+  box.innerHTML=employeeData.map(x=>`<div class="announce-item">
+    <div class="announce-item-photos">${x.foto_url?`<img src="${employeeEsc(x.foto_url)}" alt="">`:'<div style="width:48px;height:64px;border-radius:8px;background:#eaf5f0;display:grid;place-items:center;font-weight:900;color:#087454">'+employeeInitial(x.nama)+'</div>'}</div>
+    <div class="meta"><strong>${employeeEsc(x.nama||'')}</strong><small>${employeeEsc(x.jabatan||'')} · ${x.nip?employeeEsc(x.nip)+' · ':''}${x.jenjang?employeeEsc(x.jenjang)+' · ':''}${x.aktif===false?'Nonaktif':'Aktif'}</small></div>
+    <div class="actions"><button type="button" onclick="editEmployee('${employeeEsc(x.id)}')">Edit</button><button class="danger" type="button" onclick="deleteEmployee('${employeeEsc(x.id)}')">Hapus</button></div>
+  </div>`).join('');
 }
-function loadEmployeePhotos(){
-  document.querySelectorAll('[data-avatar]').forEach(el=>{
-    const id=el.getAttribute('data-avatar');
-    const data=localStorage.getItem(PHOTO_KEY_PREFIX+id);
-    if(data) applyEmployeePhoto(id,data);
-  });
-  if(adminSessionIsActive()){
-    document.body.classList.add('admin-mode');
-    document.getElementById('adminBadge')?.classList.add('show');
-  }
+
+async function initEmployees(){
+  await loadEmployees();
+  try{
+    const {data}=await supabaseClient.auth.getUser();
+    if(data?.user){
+      setAdminSession(true);
+      document.body.classList.add('admin-mode');
+      document.getElementById('adminBadge')?.classList.add('show');
+      const emailBadge=document.getElementById('adminSignedEmail');
+      if(emailBadge)emailBadge.textContent=data.user.email||'';
+      renderEmployees();
+    }
+  }catch(e){}
 }
-document.addEventListener('DOMContentLoaded',loadEmployeePhotos);
+document.addEventListener('DOMContentLoaded',initEmployees);
 
 </script>
 
@@ -1844,8 +1793,8 @@ document.addEventListener('DOMContentLoaded',loadEmployeePhotos);
     </div>
     <div class="admin-modal-body">
       <div class="admin-field">
-        <label for="adminUser">Username</label>
-        <input id="adminUser" type="text" autocomplete="username" placeholder="Username admin">
+        <label for="adminUser">Email</label>
+        <input id="adminUser" type="text" autocomplete="username" placeholder="Email admin">
       </div>
       <div class="admin-field">
         <label for="adminPass">Password</label>
@@ -1864,6 +1813,35 @@ document.addEventListener('DOMContentLoaded',loadEmployeePhotos);
       </div>
     </div>
   </div>
+</div>
+
+<!-- MODAL KELOLA PEGAWAI -->
+<div id="employeeAdminModal" class="modal-backdrop" onclick="if(event.target===this) closeEmployeeManager()">
+ <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="employeeAdminTitle">
+  <div class="admin-modal-head"><h3 id="employeeAdminTitle">Kelola Data Pegawai</h3><p>Data pegawai tersimpan di Supabase dan dapat dikelola dari perangkat mana pun setelah login admin.</p></div>
+  <div class="admin-modal-body">
+   <div class="admin-actions" style="margin-top:0"><button class="primary" type="button" onclick="addEmployee()">＋ Tambah Pegawai</button><button class="secondary" type="button" onclick="closeEmployeeManager()">Tutup</button></div>
+   <div id="employeeAdminError" class="admin-error"></div>
+   <div id="employeeAdminList" class="kepala-admin-list"></div>
+  </div>
+ </div>
+</div>
+<div id="employeeEditModal" class="modal-backdrop" onclick="if(event.target===this) closeEmployeeEdit()">
+ <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="employeeEditTitle">
+  <div class="admin-modal-head"><h3 id="employeeEditTitle">Edit Data Pegawai</h3><p>Nama, jabatan, NIP, jenjang, urutan, status, dan foto dapat diperbarui tanpa mengubah HTML.</p></div>
+  <div class="admin-modal-body">
+   <div class="announce-form-grid">
+    <div class="admin-field"><label for="employeeEditNama">Nama Pegawai</label><input id="employeeEditNama" type="text" placeholder="Nama lengkap"></div>
+    <div class="admin-field"><label for="employeeEditJabatan">Jabatan</label><input id="employeeEditJabatan" type="text" placeholder="Jabatan"></div>
+    <div class="admin-field"><label for="employeeEditNip">NIP</label><input id="employeeEditNip" type="text" placeholder="Opsional"></div>
+    <div class="admin-field"><label for="employeeEditJenjang">Jenjang</label><input id="employeeEditJenjang" type="text" placeholder="Opsional"></div>
+    <div class="admin-field"><label for="employeeEditUrutan">Urutan tampil</label><input id="employeeEditUrutan" type="number" min="0" step="1" placeholder="Contoh: 1"></div>
+    <div class="admin-field" style="display:flex;align-items:end"><label style="display:flex;gap:8px;align-items:center"><input id="employeeEditAktif" type="checkbox" checked> Tampilkan sebagai pegawai aktif</label></div>
+    <div class="admin-field full"><label for="employeeEditFoto">Foto Pegawai</label><input id="employeeEditFoto" type="file" accept="image/jpeg,image/png,image/webp"><div class="photo-limit">JPG, PNG, atau WebP. Maksimum <b>500 KB</b>. Kosongkan jika tidak ingin mengganti foto.</div></div>
+   </div>
+   <div class="admin-actions"><button class="secondary" type="button" onclick="closeEmployeeEdit()">Batal</button><button class="primary" type="button" onclick="saveEmployee()">Simpan</button></div>
+  </div>
+ </div>
 </div>
 
 <!-- MODAL KELOLA SEJARAH KEPALA KUA -->
