@@ -1447,18 +1447,36 @@ function renderNikah(){
   slider.innerHTML=`<div class="nikah-slide active ${group.length===1?'single':'two'}">${group.map(x=>`
     <article class="nikah-card">
       <div class="nikah-photo-pair">
-        <div class="nikah-photo-person"><img src="${x.fotoSuami}" alt="Foto calon suami ${nikahEsc(x.calonSuami||'')}"><span>Calon Suami</span></div>
-        <div class="nikah-photo-person"><img src="${x.fotoIstri}" alt="Foto calon istri ${nikahEsc(x.calonIstri||'')}"><span>Calon Istri</span></div>
-      </div>
-      <div class="nikah-card-body">
-        <span class="nikah-date">${nikahEsc(x.tanggal||'')}</span>
-        <h3 style="margin:12px 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.25;font-weight:700;color:var(--green-dark);letter-spacing:.2px;">
-  <span>${nikahEsc(x.calonSuami||'')}</span>
-  <span style="font-size:20px;font-weight:400;opacity:.7;margin:0 5px;">&amp;</span>
-  <span>${nikahEsc(x.calonIstri||'')}</span>
-</h3>
-        <p>Akan melangsungkan akad nikah pada tanggal tersebut.</p>
-        ${x.tempat?`<div class="nikah-place">${nikahEsc(x.tempat)}</div>`:''}
+  <div class="nikah-photo-person">
+    <img src="${x.fotoSuami}" alt="Foto calon suami ${nikahEsc(x.calonSuami||'')}">
+    <span style="position:static!important;display:block;background:none;color:#6b7d76;font-size:10px;font-weight:700;padding:7px 3px 2px;letter-spacing:.3px;">
+      Calon Suami
+    </span>
+    <strong style="display:block;text-align:center;padding:0 4px 10px;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:var(--green-dark);line-height:1.2;">
+      ${nikahEsc(x.calonSuami||'')}
+    </strong>
+  </div>
+
+  <div class="nikah-photo-person">
+    <img src="${x.fotoIstri}" alt="Foto calon istri ${nikahEsc(x.calonIstri||'')}">
+    <span style="position:static!important;display:block;background:none;color:#6b7d76;font-size:10px;font-weight:700;padding:7px 3px 2px;letter-spacing:.3px;">
+      Calon Istri
+    </span>
+    <strong style="display:block;text-align:center;padding:0 4px 10px;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:var(--green-dark);line-height:1.2;">
+      ${nikahEsc(x.calonIstri||'')}
+    </strong>
+  </div>
+</div>
+
+<div class="nikah-card-body">
+  <div style="text-align:center;margin:4px 0 7px;">
+    <strong style="display:block;font-size:16px;color:var(--green-dark);">
+      ${nikahEsc(x.tanggal||'')}
+    </strong>
+  </div>
+
+  ${x.tempat?`<div class="nikah-place" style="text-align:center;margin-top:0;">${nikahEsc(x.tempat)}</div>`:''}
+</div>
       </div>
     </article>`).join('')}</div>`;
   dots.innerHTML=groups.map((_,i)=>`<button class="nikah-dot ${i===nikahIndex?'active':''}" onclick="goNikah(${i})" aria-label="Tampilan pengumuman ${i+1}"></button>`).join('');
