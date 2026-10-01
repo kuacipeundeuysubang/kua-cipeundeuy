@@ -1312,21 +1312,90 @@ const NIKAH_OLD_KEY='kua_cipeundeuy_nikah_data_v3';
 const NIKAH_MAX_BYTES=500*1024;
 const NIKAH_MAX_W=1200, NIKAH_MAX_H=900;
 const NIKAH_SEED=[];
-function loadNikahData(){
+
+/* ===== SUPABASE ===== */
+const SUPABASE_URL='https://bhzvrnsiwpjmzawpmecd.supabase.co';
+const SUPABASE_KEY='sb_publishable_n3_gjXav2imhEnCGFK1mQw_zSLWiDKS';
+
+async function loadNikahData(){
+  try{
+    const response=await fetch(
+      `${SUPABASE_URL}/rest/v1/pengumuman_nikah?select=*`,
+      {
+        headers:{
+          'apikey':SUPABASE_KEY,
+          'Authorization':`Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    if(response.ok){
+      const rows=await response.json();
+
+      if(Array.isArray(rows)){
+        return rows.map(x=>({
+          id:x.id,
+          calonSuami:x.nama_suami||'',
+          calonIstri:x.nama_istri||'',
+          tanggalISO:x.tanggal_akad||'',
+          tanggal:nikahFormatDate(x.tanggal_akad||'',''),
+          tempat:x.alamat_akad||'',
+          status:x.status||'Aktif',
+          modeTampil:x.mode_publikasi||'Otomatis',
+          fotoSuami:x.foto_suami_url||'',
+          fotoIstri:x.foto_istri_url||''
+        }));
+      }
+    }
+  }catch(e){
+    console.warn('Supabase tidak dapat diakses:',e);
+  }
+
+  /* Cadangan sementara: data lokal */
   try{
     const raw=localStorage.getItem(NIKAH_KEY);
-    if(raw){ const parsed=JSON.parse(raw); if(Array.isArray(parsed)) return parsed; }
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed)) return parsed;
+    }
+
     const old=localStorage.getItem(NIKAH_OLD_KEY);
     if(old){
       const parsed=JSON.parse(old);
-      if(Array.isArray(parsed)) return parsed.map((x,i)=>({...x,id:x.id||('nikah-'+(i+1)),fotoSuami:x.fotoSuami||x.foto||'',fotoIstri:x.fotoIstri||x.foto||''}));
+      if(Array.isArray(parsed)){
+        return parsed.map((x,i)=>({
+          ...x,
+          id:x.id||('nikah-'+(i+1)),
+          fotoSuami:x.fotoSuami||x.foto||'',
+          fotoIstri:x.fotoIstri||x.foto||''
+        }));
+      }
     }
   }catch(e){}
-  return NIKAH_SEED.map((x,i)=>({...x,id:x.id||('nikah-'+(i+1))}));
+
+  return NIKAH_SEED.map((x,i)=>({
+    ...x,
+    id:x.id||('nikah-'+(i+1))
+  }));
 }
-let nikahData=loadNikahData();
+
+let nikahData=[];
+
+async function initNikahData(){
+  nikahData=await loadNikahData();
+  nikahIndex=0;
+  renderNikah();
+  startNikahSlider();
+}
+
 function saveNikahData(){
-  try{ localStorage.setItem(NIKAH_KEY,JSON.stringify(nikahData)); return true; }catch(e){ alert('Data belum dapat disimpan di browser. Penyimpanan lokal penuh.'); return false; }
+  try{
+    localStorage.setItem(NIKAH_KEY,JSON.stringify(nikahData));
+    return true;
+  }catch(e){
+    alert('Data belum dapat disimpan di browser. Penyimpanan lokal penuh.');
+    return false;
+  }
 }
 function nikahEsc(v){ return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])); }
 function nikahTodayISO(){
@@ -1400,8 +1469,7 @@ function startNikahSlider(){
   clearInterval(nikahTimer);
   if(Math.ceil(getVisibleNikah().length/2)>1) nikahTimer=setInterval(()=>goNikah(nikahIndex+1),5000);
 }
-renderNikah();
-startNikahSlider();
+initNikahData();
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
