@@ -1452,7 +1452,11 @@ function renderNikah(){
       </div>
       <div class="nikah-card-body">
         <span class="nikah-date">${nikahEsc(x.tanggal||'')}</span>
-        <h3>${nikahEsc(x.calonSuami||'')} &amp; ${nikahEsc(x.calonIstri||'')}</h3>
+        <h3 style="margin:12px 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.25;font-weight:700;color:var(--green-dark);letter-spacing:.2px;">
+  <span>${nikahEsc(x.calonSuami||'')}</span>
+  <span style="font-size:20px;font-weight:400;opacity:.7;margin:0 5px;">&amp;</span>
+  <span>${nikahEsc(x.calonIstri||'')}</span>
+</h3>
         <p>Akan melangsungkan akad nikah pada tanggal tersebut.</p>
         ${x.tempat?`<div class="nikah-place">${nikahEsc(x.tempat)}</div>`:''}
       </div>
