@@ -1682,25 +1682,54 @@ function openAdminLogin(){
 function closeAdminLogin(){
   document.getElementById('adminModal')?.classList.remove('show');
 }
-function loginAdmin(){
+async function loginAdmin(){
   const userEl=document.getElementById('adminUser');
   const passEl=document.getElementById('adminPass');
   const err=document.getElementById('adminError');
-  const u=(userEl?.value||'').trim();
-  const p=passEl?.value||'';
-  if(u===ADMIN_USERNAME && p===ADMIN_PASSWORD){
+
+  const email=(userEl?.value||'').trim();
+  const password=passEl?.value||'';
+
+  if(!email||!password){
+    if(err) err.textContent='Email dan password wajib diisi.';
+    return false;
+  }
+
+  try{
+    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+    const {data,error}=await client.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+    if(error){
+      if(err) err.textContent='Email atau password tidak sesuai.';
+      passEl?.focus();
+      return false;
+    }
+
+    if(!data?.user){
+      if(err) err.textContent='Login gagal. Silakan coba lagi.';
+      return false;
+    }
+
     setAdminSession(true);
     document.body.classList.add('admin-mode');
     document.getElementById('adminBadge')?.classList.add('show');
+
     if(err) err.textContent='';
     closeAdminLogin();
     showPage('pegawai');
     setTimeout(()=>openAnnouncementManager(),80);
+
+    return false;
+
+  }catch(e){
+    console.error('Login Supabase:',e);
+    if(err) err.textContent='Koneksi login bermasalah. Silakan coba lagi.';
     return false;
   }
-  if(err) err.textContent='Username atau password tidak sesuai. Gunakan: admin / KUA-Cipeundeuy-2026';
-  passEl?.focus();
-  return false;
 }
 function logoutAdmin(){
   closeAnnouncementManager();
