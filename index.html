@@ -1016,6 +1016,21 @@ body.admin-mode .gallery-admin-public-action{display:block}
 .gallery-draft-list{margin-top:18px}.gallery-draft-item{display:flex;align-items:center;gap:10px;border:1px solid #e2e7e4;border-radius:10px;padding:9px;margin-bottom:7px;background:#fff}.gallery-draft-thumb{width:52px;height:42px;border-radius:7px;background:#edf2ef;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto}.gallery-draft-thumb img{width:100%;height:100%;object-fit:cover}.gallery-draft-item .meta{flex:1;min-width:0}.gallery-draft-item .meta strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gallery-draft-item .meta small{color:#78857f;font-size:10px}.gallery-platform-status{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.gallery-platform-status span{font-size:9px;border-radius:999px;padding:3px 6px;background:#f0f3f1;color:#6d7974}.gallery-platform-status .ok{background:#e8f6ef;color:#267050}
 @media(max-width:760px){.gallery-publish-layout{grid-template-columns:1fr}.gallery-form-grid{grid-template-columns:1fr}.gallery-social-row{grid-template-columns:1fr}.gallery-publish-head{display:block}.gallery-publish-head .social-state{justify-content:flex-start;margin-top:9px}.gallery-publish-actions{display:block}.gallery-publish-actions .left,.gallery-publish-actions .right{width:100%;margin-top:7px}.gallery-publish-actions button{width:100%}}
 </style>
+
+<style>
+.gallery-db-media{width:100%;height:100%;display:block;object-fit:cover;background:#edf5ef}
+.gallery-card-media .gallery-db-media{aspect-ratio:4/3}
+.gallery-feature-media .gallery-db-media{min-height:330px;height:100%;object-fit:cover}
+.gallery-db-video{background:#111}
+.gallery-admin-list{display:grid;gap:10px;margin-top:10px}
+.gallery-admin-row{display:flex;gap:12px;align-items:center;padding:10px;border:1px solid rgba(20,75,45,.10);border-radius:12px;background:#fff}
+.gallery-admin-thumb{width:72px;height:54px;flex:0 0 72px;border-radius:8px;overflow:hidden;background:#edf5ef;display:grid;place-items:center}
+.gallery-admin-thumb img,.gallery-admin-thumb video{width:100%;height:100%;object-fit:cover}
+.gallery-admin-meta{min-width:0;flex:1}.gallery-admin-meta strong{display:block;font-size:12px;color:#173b29}.gallery-admin-meta small{display:block;color:#6b7771;margin-top:3px;font-size:10px}
+.gallery-admin-status{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.gallery-admin-status span{font-size:9px;padding:3px 6px;border-radius:999px;background:#eef4ef;color:#466252}.gallery-admin-status .on{background:#e5f4e9;color:#21613a}
+@media(max-width:600px){.gallery-feature-media .gallery-db-media{min-height:240px}.gallery-admin-row{align-items:flex-start}.gallery-admin-thumb{width:62px;height:48px;flex-basis:62px}}
+</style>
+
 </head>
 <body>
 
@@ -1124,44 +1139,8 @@ body.admin-mode .gallery-admin-public-action{display:block}
     <button type="button" class="gallery-filter-btn" data-gallery-filter="keagamaan" onclick="filterGallery('keagamaan')">Keagamaan</button>
     <button type="button" class="gallery-filter-btn" data-gallery-filter="kua" onclick="filterGallery('kua')">KUA</button>
   </div>
-  <div class="gallery-feature" data-gallery-category="kegiatan">
-    <div class="gallery-feature-media">
-      <div class="gallery-placeholder gallery-placeholder-feature"><span>📷</span><small>Foto kegiatan terbaru</small></div>
-    </div>
-    <div class="gallery-feature-info">
-      <span class="gallery-badge">Kegiatan Terbaru</span>
-      <h3>Dokumentasi Kegiatan KUA Cipeundeuy</h3>
-      <div class="gallery-meta"><span>📅 Dokumentasi terbaru</span><span>📍 KUA Cipeundeuy</span></div>
-      <p>Ruang untuk menampilkan kegiatan terbaru KUA Cipeundeuy. Foto dan informasi kegiatan akan dapat dikelola melalui menu admin.</p>
-      <button type="button" class="gallery-more-btn" onclick="openGalleryLightbox(this)">Lihat Foto</button>
-    </div>
-  </div>
-  <div class="gallery-grid" id="galleryGrid">
-    <article class="gallery-card" data-gallery-category="pelayanan" data-gallery-title="Pelayanan KUA Cipeundeuy" data-gallery-desc="Dokumentasi pelayanan kepada masyarakat di KUA Cipeundeuy.">
-      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Pelayanan KUA Cipeundeuy"><div class="gallery-placeholder"><span>📷</span></div></button>
-      <div class="gallery-card-body"><span class="gallery-card-category">Pelayanan</span><h3>Pelayanan KUA Cipeundeuy</h3><p>Dokumentasi pelayanan kepada masyarakat.</p><time>Dokumentasi KUA</time></div>
-    </article>
-    <article class="gallery-card" data-gallery-category="kegiatan" data-gallery-title="Kegiatan KUA Cipeundeuy" data-gallery-desc="Dokumentasi kegiatan dan aktivitas kedinasan KUA Cipeundeuy.">
-      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Kegiatan KUA Cipeundeuy"><div class="gallery-placeholder"><span>📷</span></div></button>
-      <div class="gallery-card-body"><span class="gallery-card-category">Kegiatan</span><h3>Kegiatan KUA Cipeundeuy</h3><p>Aktivitas dan kegiatan kedinasan.</p><time>Dokumentasi KUA</time></div>
-    </article>
-    <article class="gallery-card" data-gallery-category="pernikahan" data-gallery-title="Pelayanan Pernikahan" data-gallery-desc="Dokumentasi pelayanan dan pelaksanaan akad nikah.">
-      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Pelayanan Pernikahan"><div class="gallery-placeholder"><span>📷</span></div></button>
-      <div class="gallery-card-body"><span class="gallery-card-category">Pernikahan</span><h3>Pelayanan Pernikahan</h3><p>Dokumentasi pelayanan dan akad nikah.</p><time>Dokumentasi KUA</time></div>
-    </article>
-    <article class="gallery-card" data-gallery-category="penyuluhan" data-gallery-title="Kegiatan Penyuluhan" data-gallery-desc="Dokumentasi kegiatan penyuluhan agama dan pembinaan masyarakat.">
-      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Kegiatan Penyuluhan"><div class="gallery-placeholder"><span>📷</span></div></button>
-      <div class="gallery-card-body"><span class="gallery-card-category">Penyuluhan</span><h3>Kegiatan Penyuluhan</h3><p>Pembinaan dan penyuluhan masyarakat.</p><time>Dokumentasi KUA</time></div>
-    </article>
-    <article class="gallery-card" data-gallery-category="keagamaan" data-gallery-title="Kegiatan Keagamaan" data-gallery-desc="Dokumentasi kegiatan keagamaan yang melibatkan KUA dan masyarakat.">
-      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Kegiatan Keagamaan"><div class="gallery-placeholder"><span>📷</span></div></button>
-      <div class="gallery-card-body"><span class="gallery-card-category">Keagamaan</span><h3>Kegiatan Keagamaan</h3><p>Dokumentasi kegiatan keagamaan.</p><time>Dokumentasi KUA</time></div>
-    </article>
-    <article class="gallery-card" data-gallery-category="kua" data-gallery-title="KUA Cipeundeuy" data-gallery-desc="Dokumentasi gedung, lingkungan, dan aktivitas kantor KUA Cipeundeuy.">
-      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto KUA Cipeundeuy"><div class="gallery-placeholder"><span>📷</span></div></button>
-      <div class="gallery-card-body"><span class="gallery-card-category">KUA</span><h3>KUA Cipeundeuy</h3><p>Gedung, lingkungan, dan aktivitas kantor.</p><time>Dokumentasi KUA</time></div>
-    </article>
-  </div>
+  <div class="gallery-feature" id="galleryFeature" data-gallery-category="kegiatan" hidden></div>
+  <div class="gallery-grid" id="galleryGrid"></div>
   <div class="gallery-empty" id="galleryEmpty" hidden>Belum ada dokumentasi pada kategori ini.</div>
 </section>
 
@@ -2297,9 +2276,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
         <div>
           <label class="admin-field" style="display:block;cursor:pointer">
             <span style="display:block;font-weight:800;font-size:12px;margin-bottom:6px;color:#315448">Foto / Video</span>
-            <input id="galleryMediaInput" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" style="display:none" onchange="previewGalleryMedia(event)">
+            <input id="galleryMediaInput" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="previewGalleryMedia(event)">
             <div class="gallery-media-drop" id="galleryMediaDrop" onclick="document.getElementById('galleryMediaInput').click()">
-              <div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4 atau MOV</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>
+              <div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4, WebM atau MOV</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>
             </div>
           </label>
         </div>
@@ -2334,54 +2313,109 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
 </div>
 
 <script>
-function openGalleryManager(){
-  if(typeof requireAdmin==='function' && !requireAdmin()) return;
-  const m=document.getElementById('galleryManagerModal'); if(m)m.classList.add('show');
-  renderGalleryDraftList();
+const GALLERY_BUCKET='galeri-kua';
+const GALLERY_TABLE='galeri_kua';
+let galleryPublicData=[];
+
+function galleryEscape(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function galleryCategoryLabel(v){return ({pelayanan:'Pelayanan',kegiatan:'Kegiatan',pernikahan:'Pernikahan',penyuluhan:'Penyuluhan',keagamaan:'Keagamaan',kua:'KUA'})[v]||v||'Kegiatan';}
+function galleryDateLabel(v){if(!v)return 'Tanggal kegiatan belum diisi';try{return new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'long',year:'numeric'}).format(new Date(v+'T00:00:00'));}catch(e){return v;}}
+function galleryMediaMarkup(item,feature=false){
+  const url=item.media_url||'';
+  if(!url)return '<div class="gallery-placeholder '+(feature?'gallery-placeholder-feature':'')+'"><span>📷</span><small>Belum ada media</small></div>';
+  const type=item.media_type||'image';
+  if(type==='video') return `<video class="gallery-db-media gallery-db-video" src="${galleryEscape(url)}" muted playsinline preload="metadata" controls></video>`;
+  return `<img class="gallery-db-media" src="${galleryEscape(url)}" alt="${galleryEscape(item.judul||'Galeri KUA Cipeundeuy')}" loading="lazy">`;
 }
+function galleryCardMarkup(item){
+  return `<article class="gallery-card" data-gallery-category="${galleryEscape(item.kategori)}" data-gallery-title="${galleryEscape(item.judul)}" data-gallery-desc="${galleryEscape(item.deskripsi||item.caption||'')}" data-gallery-url="${galleryEscape(item.media_url||'')}" data-gallery-type="${galleryEscape(item.media_type||'image')}">
+    <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat ${galleryEscape(item.judul)}">${galleryMediaMarkup(item)}</button>
+    <div class="gallery-card-body"><span class="gallery-card-category">${galleryEscape(galleryCategoryLabel(item.kategori))}</span><h3>${galleryEscape(item.judul)}</h3><p>${galleryEscape(item.deskripsi||item.caption||'')}</p><time>${galleryEscape(galleryDateLabel(item.tanggal_kegiatan))}</time></div>
+  </article>`;
+}
+function renderGalleryPublic(items){
+  galleryPublicData=items||[];
+  const grid=document.getElementById('galleryGrid'), feature=document.getElementById('galleryFeature'), empty=document.getElementById('galleryEmpty');
+  if(!grid)return;
+  const sorted=[...galleryPublicData].sort((a,b)=>{
+    if(!!b.unggulan!==!!a.unggulan)return b.unggulan?1:-1;
+    return String(b.tanggal_kegiatan||b.created_at||'').localeCompare(String(a.tanggal_kegiatan||a.created_at||''));
+  });
+  const featured=sorted[0];
+  if(featured){
+    feature.hidden=false; feature.dataset.galleryCategory=featured.kategori||'kegiatan'; feature.dataset.galleryTitle=featured.judul||''; feature.dataset.galleryDesc=featured.deskripsi||featured.caption||'';
+    feature.innerHTML=`<div class="gallery-feature-media"><button type="button" class="gallery-card-media" style="width:100%;height:100%;border:0;padding:0;background:none" onclick="openGalleryLightbox(this)">${galleryMediaMarkup(featured,true)}</button></div><div class="gallery-feature-info"><span class="gallery-badge">${featured.unggulan?'Pilihan KUA':'Kegiatan Terbaru'}</span><h3>${galleryEscape(featured.judul)}</h3><div class="gallery-meta"><span>📅 ${galleryEscape(galleryDateLabel(featured.tanggal_kegiatan))}</span><span>📍 KUA Cipeundeuy</span></div><p>${galleryEscape(featured.deskripsi||featured.caption||'')}</p><button type="button" class="gallery-more-btn" onclick="openGalleryLightbox(this)">Lihat Foto</button></div>`;
+    feature.querySelector('.gallery-card-media')?.setAttribute('data-gallery-url',featured.media_url||'');
+    feature.querySelector('.gallery-card-media')?.setAttribute('data-gallery-type',featured.media_type||'image');
+  }else feature.hidden=true;
+  const rest=sorted.slice(featured?1:0);
+  grid.innerHTML=rest.map(galleryCardMarkup).join('');
+  empty.hidden=!!sorted.length;
+  filterGallery('all');
+}
+async function loadGalleryPublic(){
+  try{
+    const {data,error}=await supabaseClient.from(GALLERY_TABLE).select('*').eq('tampil_website',true).order('tanggal_kegiatan',{ascending:false}).order('created_at',{ascending:false});
+    if(error)throw error;
+    renderGalleryPublic(data||[]);
+  }catch(e){console.error('Galeri Supabase:',e);}
+}
+
+function filterGallery(category){
+  document.querySelectorAll('.gallery-filter-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.galleryFilter===category));
+  const items=[...document.querySelectorAll('#galleryGrid .gallery-card')];
+  let visible=0;
+  items.forEach(item=>{const show=category==='all'||item.dataset.galleryCategory===category;item.style.display=show?'':'none';if(show)visible++;});
+  const feature=document.getElementById('galleryFeature');
+  if(feature) feature.style.display=feature.hidden?'none':(category==='all'||feature.dataset.galleryCategory===category)?'grid':'none';
+  const empty=document.getElementById('galleryEmpty');if(empty)empty.hidden=visible>0 || (category==='all' && feature && !feature.hidden);
+}
+function openGalleryLightbox(source){
+  const card=source?.closest?.('.gallery-card'), feature=source?.closest?.('.gallery-feature');
+  const title=card?.dataset.galleryTitle||feature?.dataset.galleryTitle||feature?.querySelector('h3')?.textContent||'Galeri KUA Cipeundeuy';
+  const desc=card?.dataset.galleryDesc||feature?.dataset.galleryDesc||feature?.querySelector('p')?.textContent||'';
+  const cat=card?.querySelector('.gallery-card-category')?.textContent||feature?.querySelector('.gallery-badge')?.textContent||'Dokumentasi';
+  const url=card?.dataset.galleryUrl||source?.dataset.galleryUrl||feature?.querySelector('[data-gallery-url]')?.dataset.galleryUrl||'';
+  const type=card?.dataset.galleryType||source?.dataset.galleryType||feature?.querySelector('[data-gallery-type]')?.dataset.galleryType||'image';
+  const lb=document.getElementById('galleryLightbox');if(!lb)return;
+  document.getElementById('galleryLightboxTitle').textContent=title;document.getElementById('galleryLightboxDesc').textContent=desc;document.getElementById('galleryLightboxCategory').textContent=cat;
+  const box=document.getElementById('galleryLightboxImage');box.innerHTML=url?(type==='video'?`<video src="${galleryEscape(url)}" controls autoplay playsinline style="max-width:100%;max-height:70vh;border-radius:12px"></video>`:`<img src="${galleryEscape(url)}" alt="${galleryEscape(title)}" style="max-width:100%;max-height:70vh;object-fit:contain;border-radius:12px">`):'<span>📷</span>';
+  lb.classList.add('show');lb.setAttribute('aria-hidden','false');document.body.classList.add('gallery-lightbox-open');
+}
+function closeGalleryLightbox(event){if(event&&event.target&&event.target.closest('.gallery-lightbox-dialog')&&!event.target.closest('.gallery-lightbox-close'))return;const lb=document.getElementById('galleryLightbox');if(!lb)return;lb.classList.remove('show');lb.setAttribute('aria-hidden','true');document.body.classList.remove('gallery-lightbox-open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox();});
+
+function openGalleryManager(){if(typeof requireAdmin==='function'&&!requireAdmin())return;const m=document.getElementById('galleryManagerModal');if(m)m.classList.add('show');renderGalleryDraftList();}
 function closeGalleryManager(){document.getElementById('galleryManagerModal')?.classList.remove('show');}
-function previewGalleryMedia(e){
-  const f=e.target.files?.[0], drop=document.getElementById('galleryMediaDrop'); if(!f||!drop)return;
-  const url=URL.createObjectURL(f); const isVideo=f.type.startsWith('video/');
-  drop.innerHTML=isVideo?`<video src="${url}" controls playsinline></video>`:`<img src="${url}" alt="Pratinjau media galeri">`;
+function previewGalleryMedia(e){const f=e.target.files?.[0],drop=document.getElementById('galleryMediaDrop');if(!f||!drop)return;const url=URL.createObjectURL(f),isVideo=f.type.startsWith('video/');drop.innerHTML=isVideo?`<video src="${url}" controls playsinline></video>`:`<img src="${url}" alt="Pratinjau media galeri">`;}
+function galleryStatus(msg,type='info'){const el=document.getElementById('galleryPostStatus');if(!el)return;el.textContent=msg;el.className='gallery-post-status show '+type;}
+function galleryFormData(){return {title:(document.getElementById('galleryPostTitle')?.value||'').trim(),date:document.getElementById('galleryPostDate')?.value||'',category:document.getElementById('galleryPostCategory')?.value||'kegiatan',caption:(document.getElementById('galleryPostCaption')?.value||'').trim(),hashtags:(document.getElementById('galleryPostHashtag')?.value||'').trim(),website:!!document.getElementById('galleryPublishWebsite')?.checked,instagram:!!document.getElementById('galleryPublishInstagram')?.checked,tiktok:!!document.getElementById('galleryPublishTiktok')?.checked,featured:!!document.getElementById('galleryPublishFeatured')?.checked};}
+function resetGalleryPostForm(){['galleryPostTitle','galleryPostDate','galleryPostCaption'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const h=document.getElementById('galleryPostHashtag');if(h)h.value='#KUACipeundeuy #KemenagSubang #PelayananKUA';['galleryPublishInstagram','galleryPublishTiktok','galleryPublishFeatured'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});const w=document.getElementById('galleryPublishWebsite');if(w)w.checked=true;const input=document.getElementById('galleryMediaInput');if(input)input.value='';const drop=document.getElementById('galleryMediaDrop');if(drop)drop.innerHTML='<div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4, WebM atau MOV</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>';const st=document.getElementById('galleryPostStatus');if(st)st.className='gallery-post-status';}
+async function uploadGalleryMedia(file,id){const ext=(file.name.split('.').pop()||'bin').toLowerCase();const safeExt=ext==='jpeg'?'jpg':ext;const path=`${new Date().getFullYear()}/${id}-${Date.now()}.${safeExt}`;const {error}=await supabaseClient.storage.from(GALLERY_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=supabaseClient.storage.from(GALLERY_BUCKET).getPublicUrl(path);return {url:data.publicUrl,path};}
+async function saveGalleryToSupabase(asDraft=false){
+  const d=galleryFormData(),f=document.getElementById('galleryMediaInput')?.files?.[0];
+  if(!d.title){galleryStatus('Isi judul postingan terlebih dahulu.','warn');return null;}
+  if(!f){galleryStatus('Pilih foto atau video terlebih dahulu.','warn');return null;}
+  const isVideo=f.type.startsWith('video/');
+  const max=isVideo?30*1024*1024:5*1024*1024;
+  if(f.size>max){galleryStatus(`Ukuran ${isVideo?'video':'foto'} terlalu besar. Maksimal ${isVideo?'30 MB':'5 MB'}.`,'warn');return null;}
+  const {data:userData}=await supabaseClient.auth.getUser();if(!userData?.user){galleryStatus('Sesi Admin belum aktif. Silakan login kembali.','warn');return null;}
+  const id=crypto.randomUUID?crypto.randomUUID():`gal-${Date.now()}`;
+  galleryStatus('Mengunggah media dan menyimpan data ke Supabase...','info');
+  let media;
+  try{media=await uploadGalleryMedia(f,id);const payload={id,judul:d.title,tanggal_kegiatan:d.date||null,kategori:d.category,deskripsi:d.caption||'',caption:d.caption||'',hashtag:d.hashtags||'',media_url:media.url,media_type:isVideo?'video':'image',unggulan:d.featured,tampil_website:asDraft?false:d.website,posting_instagram:d.instagram,posting_tiktok:d.tiktok,status_instagram:d.instagram?'Menunggu integrasi':'Belum diposting',status_tiktok:d.tiktok?'Menunggu integrasi':'Belum diposting',updated_at:new Date().toISOString()};const {error}=await supabaseClient.from(GALLERY_TABLE).insert(payload);if(error)throw error;galleryStatus(asDraft?'Draft tersimpan di Supabase.':'Postingan berhasil disimpan ke Supabase dan Galeri website.','success');await loadGalleryPublic();await renderGalleryDraftList();return payload;}catch(e){console.error('Simpan Galeri:',e);if(media?.path)await supabaseClient.storage.from(GALLERY_BUCKET).remove([media.path]).catch(()=>{});galleryStatus('Gagal menyimpan Galeri: '+(e.message||'terjadi kesalahan.'),'warn');return null;}
 }
-function galleryStatus(msg,type='info'){
-  const el=document.getElementById('galleryPostStatus'); if(!el)return; el.textContent=msg; el.className='gallery-post-status show '+type;
+async function saveGalleryDraft(){await saveGalleryToSupabase(true);}
+async function renderGalleryDraftList(){
+  const el=document.getElementById('galleryDraftList');if(!el)return;
+  try{const {data,error}=await supabaseClient.from(GALLERY_TABLE).select('*').order('created_at',{ascending:false}).limit(5);if(error)throw error;if(!data?.length){el.innerHTML='<div style="font-size:11px;color:#7b8782">Belum ada posting tersimpan di Supabase.</div>';return;}
+    el.innerHTML=data.map(x=>`<div class="gallery-admin-row"><div class="gallery-admin-thumb">${x.media_type==='video'?`<video src="${galleryEscape(x.media_url)}" muted></video>`:`<img src="${galleryEscape(x.media_url)}" alt="">`}</div><div class="gallery-admin-meta"><strong>${galleryEscape(x.judul)}</strong><small>${galleryEscape(galleryDateLabel(x.tanggal_kegiatan))} · ${galleryEscape(galleryCategoryLabel(x.kategori))}</small><div class="gallery-admin-status"><span class="on">Website ${x.tampil_website?'✓':'Draft'}</span><span>Instagram ${galleryEscape(x.status_instagram||'Belum diposting')}</span><span>TikTok ${galleryEscape(x.status_tiktok||'Belum diposting')}</span></div></div></div>`).join('');
+  }catch(e){el.innerHTML='<div style="font-size:11px;color:#9a5b34">Riwayat belum dapat dibaca. Jika draft perlu terlihat oleh Admin, kita tambahkan policy SELECT khusus Admin.</div>';}
 }
-function galleryFormData(){
-  return {title:(document.getElementById('galleryPostTitle')?.value||'').trim(),date:document.getElementById('galleryPostDate')?.value||'',category:document.getElementById('galleryPostCategory')?.value||'kegiatan',caption:(document.getElementById('galleryPostCaption')?.value||'').trim(),hashtags:(document.getElementById('galleryPostHashtag')?.value||'').trim(),website:!!document.getElementById('galleryPublishWebsite')?.checked,instagram:!!document.getElementById('galleryPublishInstagram')?.checked,tiktok:!!document.getElementById('galleryPublishTiktok')?.checked,featured:!!document.getElementById('galleryPublishFeatured')?.checked};
-}
-function resetGalleryPostForm(){
-  ['galleryPostTitle','galleryPostDate','galleryPostCaption'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  const h=document.getElementById('galleryPostHashtag');if(h)h.value='#KUACipeundeuy #KemenagSubang #PelayananKUA';
-  ['galleryPublishInstagram','galleryPublishTiktok','galleryPublishFeatured'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});
-  const w=document.getElementById('galleryPublishWebsite');if(w)w.checked=true;
-  const input=document.getElementById('galleryMediaInput');if(input)input.value='';
-  const drop=document.getElementById('galleryMediaDrop');if(drop)drop.innerHTML='<div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4 atau MOV</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>';
-  const st=document.getElementById('galleryPostStatus');if(st)st.className='gallery-post-status';
-}
-function saveGalleryDraft(){
-  const d=galleryFormData(); if(!d.title){galleryStatus('Isi judul postingan terlebih dahulu.','warn');return;}
-  let list=[];try{list=JSON.parse(localStorage.getItem('kua_gallery_drafts')||'[]')}catch(e){}
-  list.unshift({...d,savedAt:new Date().toISOString()});localStorage.setItem('kua_gallery_drafts',JSON.stringify(list.slice(0,10)));renderGalleryDraftList();galleryStatus('Draft tersimpan di perangkat ini. Nanti kita pindahkan ke Supabase agar tersimpan terpusat.');
-}
-function renderGalleryDraftList(){
-  const el=document.getElementById('galleryDraftList');if(!el)return;let list=[];try{list=JSON.parse(localStorage.getItem('kua_gallery_drafts')||'[]')}catch(e){}
-  if(!list.length){el.innerHTML='<div style="font-size:11px;color:#7b8782">Belum ada posting tersimpan.</div>';return;}
-  el.innerHTML=list.slice(0,5).map(x=>`<div class="gallery-draft-item"><div class="gallery-draft-thumb">📷</div><div class="meta"><strong>${String(x.title||'Tanpa judul').replace(/[&<>]/g,'')}</strong><small>${x.date||'Tanggal belum diisi'} · ${x.category||''}</small><div class="gallery-platform-status"><span class="ok">Website ${x.website?'✓':'—'}</span><span>Instagram ${x.instagram?'✓':'—'}</span><span>TikTok ${x.tiktok?'✓':'—'}</span></div></div></div>`).join('');
-}
-function prepareSocialPublish(){
-  const d=galleryFormData();
-  if(!d.title){galleryStatus('Isi judul postingan terlebih dahulu.','warn');return;}
-  if(!d.instagram&&!d.tiktok){galleryStatus('Pilih Instagram dan/atau TikTok pada Tujuan publikasi.','warn');return;}
-  galleryStatus('Postingan siap masuk tahap koneksi akun. Setelah akun terhubung, tombol ini akan meneruskan media dan caption melalui API resmi.','info');
-}
-function publishGalleryPost(){
-  const d=galleryFormData(); const f=document.getElementById('galleryMediaInput')?.files?.[0];
-  if(!d.title||!f){galleryStatus('Lengkapi judul dan pilih foto/video terlebih dahulu.','warn');return;}
-  if(d.instagram||d.tiktok){galleryStatus('Media sudah siap. Integrasi Instagram/TikTok belum diaktifkan pada akun ini, jadi belum ada posting yang dikirim ke platform. Website dapat kita sambungkan ke Supabase pada tahap berikutnya.','warn');return;}
-  galleryStatus('Posting website siap. Penyimpanan Galeri Supabase akan kita sambungkan pada tahap berikutnya.','info');
-}
+function prepareSocialPublish(){const d=galleryFormData();if(!d.title){galleryStatus('Isi judul postingan terlebih dahulu.','warn');return;}if(!d.instagram&&!d.tiktok){galleryStatus('Pilih Instagram dan/atau TikTok pada Tujuan publikasi.','warn');return;}galleryStatus('Data publikasi sudah disiapkan. Instagram/TikTok akan dikirim setelah koneksi API resmi diaktifkan.','info');}
+async function publishGalleryPost(){const d=galleryFormData();if(!d.website&&!d.instagram&&!d.tiktok){galleryStatus('Pilih minimal satu tujuan publikasi.','warn');return;}const result=await saveGalleryToSupabase(false);if(result&&d.instagram||result&&d.tiktok)galleryStatus('Postingan tersimpan di Supabase. Pengiriman Instagram/TikTok masih menunggu integrasi API resmi.','info');}
+
+document.addEventListener('DOMContentLoaded',()=>{loadGalleryPublic();});
 </script>
 </body>
 </html>
