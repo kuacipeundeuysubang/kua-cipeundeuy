@@ -1051,6 +1051,7 @@ body.admin-mode .gallery-admin-public-action{display:block}
 .gallery-admin-thumb img,.gallery-admin-thumb video{width:100%;height:100%;object-fit:cover}
 .gallery-admin-meta{min-width:0;flex:1}.gallery-admin-meta strong{display:block;font-size:12px;color:#173b29}.gallery-admin-meta small{display:block;color:#6b7771;margin-top:3px;font-size:10px}
 .gallery-admin-status{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.gallery-admin-status span{font-size:9px;padding:3px 6px;border-radius:999px;background:#eef4ef;color:#466252}.gallery-admin-status .on{background:#e5f4e9;color:#21613a}
+.gallery-admin-actions{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.gallery-admin-actions button{border:1px solid #d4ddd8;background:#fff;color:#365047;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:800;cursor:pointer}.gallery-admin-actions .edit{background:#eef6f0;color:#1d6342;border-color:#cfe3d5}.gallery-admin-actions .delete{background:#fff4f1;color:#9a3f2d;border-color:#efd0c8}.gallery-edit-note{display:none;margin:0 0 10px;padding:9px 11px;border-radius:9px;background:#eef6f0;color:#285b43;font-size:11px;font-weight:700}.gallery-edit-note.show{display:block}
 @media(max-width:600px){.gallery-feature-media .gallery-db-media{min-height:240px}.gallery-admin-row{align-items:flex-start}.gallery-admin-thumb{width:62px;height:48px;flex-basis:62px}}
 </style>
 
@@ -2295,6 +2296,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
       </div>
     </div>
     <div class="admin-modal-body">
+      <div id="galleryEditNote" class="gallery-edit-note">Mode edit postingan aktif. Media baru boleh dipilih jika ingin mengganti foto/video.</div>
       <div class="gallery-publish-layout">
         <div>
           <label class="admin-field" style="display:block;cursor:pointer">
@@ -2327,7 +2329,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
         </div>
       </div>
       <div class="gallery-publish-actions">
-        <div class="left"><button type="button" onclick="resetGalleryPostForm()">Bersihkan</button><button type="button" onclick="saveGalleryDraft()">Simpan Draft</button></div>
+        <div class="left"><button type="button" onclick="resetGalleryPostForm()">Bersihkan</button><button type="button" onclick="saveGalleryDraft()">Simpan Draft</button><button id="galleryCancelEditBtn" type="button" style="display:none" onclick="cancelGalleryEdit()">Batal Edit</button></div>
         <div class="right"><button class="social-primary" type="button" onclick="prepareSocialPublish()">Siapkan Publikasi</button><button class="primary" type="button" onclick="publishGalleryPost()">Publikasikan</button></div>
       </div>
       <div class="gallery-draft-list"><div class="section-title" style="margin:18px 0 9px"><div class="kicker">Riwayat</div><h2 style="font-size:17px">Posting Terakhir</h2></div><div id="galleryDraftList"></div></div>
@@ -2339,6 +2341,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
 const GALLERY_BUCKET='galeri-kua';
 const GALLERY_TABLE='galeri_kua';
 let galleryPublicData=[];
+let galleryEditingId=null;
+let galleryEditingMediaPath=null;
 
 function galleryEscape(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function galleryCategoryLabel(v){return ({pelayanan:'Pelayanan',kegiatan:'Kegiatan',pernikahan:'Pernikahan',penyuluhan:'Penyuluhan',keagamaan:'Keagamaan',kua:'KUA'})[v]||v||'Kegiatan';}
@@ -2413,26 +2417,103 @@ function closeGalleryManager(){document.getElementById('galleryManagerModal')?.c
 function previewGalleryMedia(e){const f=e.target.files?.[0],drop=document.getElementById('galleryMediaDrop');if(!f||!drop)return;const url=URL.createObjectURL(f),isVideo=f.type.startsWith('video/');drop.innerHTML=isVideo?`<video src="${url}" controls playsinline></video>`:`<img src="${url}" alt="Pratinjau media galeri">`;}
 function galleryStatus(msg,type='info'){const el=document.getElementById('galleryPostStatus');if(!el)return;el.textContent=msg;el.className='gallery-post-status show '+type;}
 function galleryFormData(){return {title:(document.getElementById('galleryPostTitle')?.value||'').trim(),date:document.getElementById('galleryPostDate')?.value||'',category:document.getElementById('galleryPostCategory')?.value||'kegiatan',caption:(document.getElementById('galleryPostCaption')?.value||'').trim(),hashtags:(document.getElementById('galleryPostHashtag')?.value||'').trim(),website:!!document.getElementById('galleryPublishWebsite')?.checked,instagram:!!document.getElementById('galleryPublishInstagram')?.checked,tiktok:!!document.getElementById('galleryPublishTiktok')?.checked,featured:!!document.getElementById('galleryPublishFeatured')?.checked};}
-function resetGalleryPostForm(){['galleryPostTitle','galleryPostDate','galleryPostCaption'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const h=document.getElementById('galleryPostHashtag');if(h)h.value='#KUACipeundeuy #KemenagSubang #PelayananKUA';['galleryPublishInstagram','galleryPublishTiktok','galleryPublishFeatured'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});const w=document.getElementById('galleryPublishWebsite');if(w)w.checked=true;const input=document.getElementById('galleryMediaInput');if(input)input.value='';const drop=document.getElementById('galleryMediaDrop');if(drop)drop.innerHTML='<div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4 atau WebM</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>';const st=document.getElementById('galleryPostStatus');if(st)st.className='gallery-post-status';}
+function resetGalleryPostForm(){
+  galleryEditingId=null; galleryEditingMediaPath=null;
+  ['galleryPostTitle','galleryPostDate','galleryPostCaption'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  const h=document.getElementById('galleryPostHashtag');if(h)h.value='#KUACipeundeuy #KemenagSubang #PelayananKUA';
+  ['galleryPublishInstagram','galleryPublishTiktok','galleryPublishFeatured'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});
+  const w=document.getElementById('galleryPublishWebsite');if(w)w.checked=true;
+  const input=document.getElementById('galleryMediaInput');if(input)input.value='';
+  const drop=document.getElementById('galleryMediaDrop');if(drop)drop.innerHTML='<div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4 atau WebM</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>';
+  const note=document.getElementById('galleryEditNote');if(note)note.classList.remove('show');
+  const cancel=document.getElementById('galleryCancelEditBtn');if(cancel)cancel.style.display='none';
+  const title=document.getElementById('galleryManagerTitle');if(title)title.textContent='Kelola Galeri & Publikasi';
+  const st=document.getElementById('galleryPostStatus');if(st)st.className='gallery-post-status';
+}
+function cancelGalleryEdit(){resetGalleryPostForm();galleryStatus('Mode edit dibatalkan.','info');}
+function galleryStoragePathFromUrl(url){
+  if(!url)return null;
+  const marker='/storage/v1/object/public/'+GALLERY_BUCKET+'/';
+  const i=url.indexOf(marker);
+  if(i<0)return null;
+  return decodeURIComponent(url.slice(i+marker.length));
+}
+async function editGalleryPost(id){
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  try{
+    const {data,error}=await supabaseClient.from(GALLERY_TABLE).select('*').eq('id',id).maybeSingle();
+    if(error)throw error; if(!data){galleryStatus('Postingan tidak ditemukan.','warn');return;}
+    galleryEditingId=data.id; galleryEditingMediaPath=galleryStoragePathFromUrl(data.media_url);
+    document.getElementById('galleryPostTitle').value=data.judul||'';
+    document.getElementById('galleryPostDate').value=data.tanggal_kegiatan||'';
+    document.getElementById('galleryPostCategory').value=data.kategori||'kegiatan';
+    document.getElementById('galleryPostCaption').value=data.caption||data.deskripsi||'';
+    document.getElementById('galleryPostHashtag').value=data.hashtag||'#KUACipeundeuy #KemenagSubang #PelayananKUA';
+    document.getElementById('galleryPublishWebsite').checked=!!data.tampil_website;
+    document.getElementById('galleryPublishInstagram').checked=!!data.posting_instagram;
+    document.getElementById('galleryPublishTiktok').checked=!!data.posting_tiktok;
+    document.getElementById('galleryPublishFeatured').checked=!!data.unggulan;
+    const input=document.getElementById('galleryMediaInput');if(input)input.value='';
+    const drop=document.getElementById('galleryMediaDrop');if(drop){drop.innerHTML=data.media_type==='video'?`<video src="${galleryEscape(data.media_url||'')}" controls playsinline></video><small style="display:block;margin-top:6px;color:#6b7771">Media saat ini. Pilih file baru jika ingin mengganti.</small>`:`<img src="${galleryEscape(data.media_url||'')}" alt="Media saat ini"><small style="display:block;margin-top:6px;color:#6b7771">Media saat ini. Pilih file baru jika ingin mengganti.</small>`;}
+    document.getElementById('galleryEditNote')?.classList.add('show');
+    const cancel=document.getElementById('galleryCancelEditBtn');if(cancel)cancel.style.display='inline-flex';
+    const title=document.getElementById('galleryManagerTitle');if(title)title.textContent='Edit Posting Galeri';
+    galleryStatus('Postingan dimuat. Anda dapat mengubah data atau mengganti media.','info');
+    document.getElementById('galleryManagerModal')?.classList.add('show');
+  }catch(e){console.error('Edit Galeri:',e);galleryStatus('Gagal memuat postingan: '+(e.message||'terjadi kesalahan.'),'warn');}
+}
+async function deleteGalleryPost(id){
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  const ok=confirm('Hapus postingan Galeri ini? Media foto/video juga akan dihapus dari Storage.');
+  if(!ok)return;
+  try{
+    const {data,error}=await supabaseClient.from(GALLERY_TABLE).select('id,media_url').eq('id',id).maybeSingle();
+    if(error)throw error; if(!data){galleryStatus('Postingan tidak ditemukan.','warn');return;}
+    const path=galleryStoragePathFromUrl(data.media_url);
+    const {error:delError}=await supabaseClient.from(GALLERY_TABLE).delete().eq('id',id);
+    if(delError)throw delError;
+    if(path){const {error:storageError}=await supabaseClient.storage.from(GALLERY_BUCKET).remove([path]);if(storageError)console.warn('Media Storage belum terhapus:',storageError);}
+    if(galleryEditingId===id)resetGalleryPostForm();
+    galleryStatus('Postingan dan media berhasil dihapus.','success');
+    await loadGalleryPublic(); await renderGalleryDraftList();
+  }catch(e){console.error('Hapus Galeri:',e);galleryStatus('Gagal menghapus Galeri: '+(e.message||'terjadi kesalahan.'),'warn');}
+}
+
 async function uploadGalleryMedia(file,id){const ext=(file.name.split('.').pop()||'bin').toLowerCase();const safeExt=ext==='jpeg'?'jpg':ext;const path=`${new Date().getFullYear()}/${id}-${Date.now()}.${safeExt}`;const {error}=await supabaseClient.storage.from(GALLERY_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=supabaseClient.storage.from(GALLERY_BUCKET).getPublicUrl(path);return {url:data.publicUrl,path};}
 async function saveGalleryToSupabase(asDraft=false){
   const d=galleryFormData(),f=document.getElementById('galleryMediaInput')?.files?.[0];
   if(!d.title){galleryStatus('Isi judul postingan terlebih dahulu.','warn');return null;}
-  if(!f){galleryStatus('Pilih foto atau video terlebih dahulu.','warn');return null;}
-  const isVideo=f.type.startsWith('video/');
-  const max=isVideo?30*1024*1024:5*1024*1024;
-  if(f.size>max){galleryStatus(`Ukuran ${isVideo?'video':'foto'} terlalu besar. Maksimal ${isVideo?'30 MB':'5 MB'}.`,'warn');return null;}
   const {data:userData}=await supabaseClient.auth.getUser();if(!userData?.user){galleryStatus('Sesi Admin belum aktif. Silakan login kembali.','warn');return null;}
-  const id=crypto.randomUUID?crypto.randomUUID():`gal-${Date.now()}`;
-  galleryStatus('Mengunggah media dan menyimpan data ke Supabase...','info');
-  let media;
-  try{media=await uploadGalleryMedia(f,id);const payload={id,judul:d.title,tanggal_kegiatan:d.date||null,kategori:d.category,deskripsi:d.caption||'',caption:d.caption||'',hashtag:d.hashtags||'',media_url:media.url,media_type:isVideo?'video':'image',unggulan:d.featured,tampil_website:asDraft?false:d.website,posting_instagram:d.instagram,posting_tiktok:d.tiktok,status_instagram:d.instagram?'Menunggu integrasi':'Belum diposting',status_tiktok:d.tiktok?'Menunggu integrasi':'Belum diposting',updated_at:new Date().toISOString()};const {error}=await supabaseClient.from(GALLERY_TABLE).insert(payload);if(error)throw error;galleryStatus(asDraft?'Draft tersimpan di Supabase.':'Postingan berhasil disimpan ke Supabase dan Galeri website.','success');await loadGalleryPublic();await renderGalleryDraftList();return payload;}catch(e){console.error('Simpan Galeri:',e);if(media?.path)await supabaseClient.storage.from(GALLERY_BUCKET).remove([media.path]).catch(()=>{});galleryStatus('Gagal menyimpan Galeri: '+(e.message||'terjadi kesalahan.'),'warn');return null;}
+  const isEdit=!!galleryEditingId;
+  if(!isEdit&&!f){galleryStatus('Pilih foto atau video terlebih dahulu.','warn');return null;}
+  if(f){const isVideo=f.type.startsWith('video/');const max=isVideo?30*1024*1024:5*1024*1024;if(f.size>max){galleryStatus(`Ukuran ${isVideo?'video':'foto'} terlalu besar. Maksimal ${isVideo?'30 MB':'5 MB'}.`,'warn');return null;}}
+  galleryStatus(isEdit?'Menyimpan perubahan ke Supabase...':'Mengunggah media dan menyimpan data ke Supabase...','info');
+  let uploaded=null;
+  let updateSucceeded=false;
+  try{
+    if(isEdit){
+      const {data:existing,error:currentError}=await supabaseClient.from(GALLERY_TABLE).select('*').eq('id',galleryEditingId).maybeSingle();
+      if(currentError)throw currentError; if(!existing)throw new Error('Postingan tidak ditemukan.');
+      let mediaUrl=existing.media_url,mediaType=existing.media_type;
+      if(f){uploaded=await uploadGalleryMedia(f,galleryEditingId);mediaUrl=uploaded.url;mediaType=f.type.startsWith('video/')?'video':'image';}
+      const payload={judul:d.title,tanggal_kegiatan:d.date||null,kategori:d.category,deskripsi:d.caption||'',caption:d.caption||'',hashtag:d.hashtags||'',media_url:mediaUrl,media_type:mediaType,unggulan:d.featured,tampil_website:asDraft?false:d.website,posting_instagram:d.instagram,posting_tiktok:d.tiktok,status_instagram:d.instagram?(existing.status_instagram==='Berhasil'?'Berhasil':'Menunggu integrasi'):'Belum diposting',status_tiktok:d.tiktok?(existing.status_tiktok==='Berhasil'?'Berhasil':'Menunggu integrasi'):'Belum diposting',updated_at:new Date().toISOString()};
+      const {error}=await supabaseClient.from(GALLERY_TABLE).update(payload).eq('id',galleryEditingId);if(error)throw error; updateSucceeded=true;
+      if(uploaded?.path&&existing.media_url&&existing.media_url!==uploaded.url){const oldPath=galleryStoragePathFromUrl(existing.media_url);if(oldPath)await supabaseClient.storage.from(GALLERY_BUCKET).remove([oldPath]).catch(err=>console.warn('Media lama belum terhapus:',err));}
+      galleryStatus(asDraft?'Perubahan disimpan sebagai draft.':'Perubahan postingan berhasil disimpan.','success');
+      await loadGalleryPublic();await renderGalleryDraftList();return {...existing,...payload};
+    }
+    const isVideo=f.type.startsWith('video/');const id=crypto.randomUUID?crypto.randomUUID():`gal-${Date.now()}`;
+    uploaded=await uploadGalleryMedia(f,id);
+    const payload={id,judul:d.title,tanggal_kegiatan:d.date||null,kategori:d.category,deskripsi:d.caption||'',caption:d.caption||'',hashtag:d.hashtags||'',media_url:uploaded.url,media_type:isVideo?'video':'image',unggulan:d.featured,tampil_website:asDraft?false:d.website,posting_instagram:d.instagram,posting_tiktok:d.tiktok,status_instagram:d.instagram?'Menunggu integrasi':'Belum diposting',status_tiktok:d.tiktok?'Menunggu integrasi':'Belum diposting',updated_at:new Date().toISOString()};
+    const {error}=await supabaseClient.from(GALLERY_TABLE).insert(payload);if(error)throw error;galleryStatus(asDraft?'Draft tersimpan di Supabase.':'Postingan berhasil disimpan ke Supabase dan Galeri website.','success');await loadGalleryPublic();await renderGalleryDraftList();return payload;
+  }catch(e){console.error('Simpan Galeri:',e);if(uploaded?.path&&!updateSucceeded)await supabaseClient.storage.from(GALLERY_BUCKET).remove([uploaded.path]).catch(()=>{});galleryStatus((isEdit?'Gagal menyimpan perubahan: ':'Gagal menyimpan Galeri: ')+(e.message||'terjadi kesalahan.'),'warn');return null;}
 }
+
 async function saveGalleryDraft(){await saveGalleryToSupabase(true);}
 async function renderGalleryDraftList(){
   const el=document.getElementById('galleryDraftList');if(!el)return;
   try{const {data,error}=await supabaseClient.from(GALLERY_TABLE).select('*').order('created_at',{ascending:false}).limit(5);if(error)throw error;if(!data?.length){el.innerHTML='<div style="font-size:11px;color:#7b8782">Belum ada posting tersimpan di Supabase.</div>';return;}
-    el.innerHTML=data.map(x=>`<div class="gallery-admin-row"><div class="gallery-admin-thumb">${x.media_type==='video'?`<video src="${galleryEscape(x.media_url)}" muted></video>`:`<img src="${galleryEscape(x.media_url)}" alt="">`}</div><div class="gallery-admin-meta"><strong>${galleryEscape(x.judul)}</strong><small>${galleryEscape(galleryDateLabel(x.tanggal_kegiatan))} · ${galleryEscape(galleryCategoryLabel(x.kategori))}</small><div class="gallery-admin-status"><span class="on">Website ${x.tampil_website?'✓':'Draft'}</span><span>Instagram ${galleryEscape(x.status_instagram||'Belum diposting')}</span><span>TikTok ${galleryEscape(x.status_tiktok||'Belum diposting')}</span></div></div></div>`).join('');
+    el.innerHTML=data.map(x=>`<div class="gallery-admin-row"><div class="gallery-admin-thumb">${x.media_type==='video'?`<video src="${galleryEscape(x.media_url)}" muted></video>`:`<img src="${galleryEscape(x.media_url)}" alt="">`}</div><div class="gallery-admin-meta"><strong>${galleryEscape(x.judul)}</strong><small>${galleryEscape(galleryDateLabel(x.tanggal_kegiatan))} · ${galleryEscape(galleryCategoryLabel(x.kategori))}</small><div class="gallery-admin-status"><span class="on">Website ${x.tampil_website?'✓':'Draft'}</span><span>Instagram ${galleryEscape(x.status_instagram||'Belum diposting')}</span><span>TikTok ${galleryEscape(x.status_tiktok||'Belum diposting')}</span></div></div><div class="gallery-admin-actions"><button class="edit" type="button" onclick="editGalleryPost('${galleryEscape(x.id)}')">✏ Edit</button><button class="delete" type="button" onclick="deleteGalleryPost('${galleryEscape(x.id)}')">🗑 Hapus</button></div></div>`).join('');
   }catch(e){el.innerHTML='<div style="font-size:11px;color:#9a5b34">Riwayat belum dapat dibaca. Jika draft perlu terlihat oleh Admin, kita tambahkan policy SELECT khusus Admin.</div>';}
 }
 function prepareSocialPublish(){const d=galleryFormData();if(!d.title){galleryStatus('Isi judul postingan terlebih dahulu.','warn');return;}if(!d.instagram&&!d.tiktok){galleryStatus('Pilih Instagram dan/atau TikTok pada Tujuan publikasi.','warn');return;}galleryStatus('Data publikasi sudah disiapkan. Instagram/TikTok akan dikirim setelah koneksi API resmi diaktifkan.','info');}
