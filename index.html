@@ -558,15 +558,6 @@ body.admin-mode .photo-actions{display:block}
   .nikah-photo{height:180px}
 }
 
-
-/* V2: lokasi akad di bawah tanggal — ringkas, elegan, aman untuk alamat panjang */
-.nikah-elegant-info{padding:15px 14px 17px;text-align:center;background:linear-gradient(180deg,#fffdf7 0%,#fff 100%);border-top:1px solid rgba(185,145,36,.18)}
-.nikah-event-label{font-size:8px;letter-spacing:1.45px;font-weight:800;color:#8a7026;margin-bottom:6px;text-transform:uppercase}
-.nikah-date-elegant{display:inline-block;color:var(--green-dark);font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:700;line-height:1.25;padding:6px 14px;border-top:1px solid rgba(208,165,47,.48);border-bottom:1px solid rgba(208,165,47,.48);max-width:100%}
-.nikah-location-elegant{margin:9px auto 0;display:flex;align-items:flex-start;justify-content:center;gap:6px;max-width:92%;font-size:11px;line-height:1.45;color:#5d7069;font-weight:600;overflow-wrap:anywhere;word-break:break-word}
-.nikah-location-icon{color:var(--gold);font-size:15px;line-height:1.1;flex:0 0 auto}
-@media(max-width:520px){.nikah-elegant-info{padding:13px 11px 15px}.nikah-date-elegant{font-size:17px;padding:5px 10px}.nikah-location-elegant{font-size:10.5px;max-width:96%}}
-
 /* PENGUMUMAN KEHENDAK NIKAH - styles defined above */
 
 
@@ -1488,10 +1479,14 @@ function renderNikah(){
   </div>
 </div>
 
-<div class="nikah-card-body nikah-elegant-info">
-  <div class="nikah-event-label">AKAN DILAKSANAKAN AKAD NIKAH</div>
-  <div class="nikah-date-elegant">${nikahEsc(x.tanggal||'')}</div>
-  ${x.tempat?`<div class="nikah-location-elegant"><span class="nikah-location-icon">⌖</span><span>${nikahEsc(x.tempat)}</span></div>`:''}
+<div class="nikah-card-body">
+  <div style="text-align:center;margin:4px 0 7px;">
+    <strong style="display:block;font-size:16px;color:var(--green-dark);">
+      ${nikahEsc(x.tanggal||'')}
+    </strong>
+  </div>
+
+  ${x.tempat?`<div class="nikah-place" style="text-align:center;margin-top:0;">${nikahEsc(x.tempat)}</div>`:''}
 </div>
       </div>
     </article>`).join('')}</div>`;
