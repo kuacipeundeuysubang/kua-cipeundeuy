@@ -1871,41 +1871,62 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const KEPALA_HISTORY_KEY='kua_cipeundeuy_kepala_history_v1';
-const KEPALA_MAX_PHOTO_BYTES=800*1024;
-const KEPALA_DEFAULT=[{"id": "kepala-1", "nama": "Drs. H. Sahyat Sobarna", "masa": "1994–1997", "keterangan": "", "foto": ""}, {"id": "kepala-2", "nama": "Zaenudin, BA", "masa": "1997–1998", "keterangan": "", "foto": ""}, {"id": "kepala-3", "nama": "Pa Udung Saefudin", "masa": "1998–2001", "keterangan": "", "foto": ""}, {"id": "kepala-4", "nama": "H. Abd. Rohman", "masa": "2004–2007", "keterangan": "", "foto": ""}, {"id": "kepala-5", "nama": "Hidayat, S.Ag.", "masa": "2004–2007", "keterangan": "", "foto": ""}, {"id": "kepala-6", "nama": "Drs. Obanudin", "masa": "2007", "keterangan": "", "foto": ""}, {"id": "kepala-7", "nama": "Tatang S, S.Ag.", "masa": "2007–2009", "keterangan": "", "foto": ""}, {"id": "kepala-8", "nama": "Saipudin, M.Pd.I.", "masa": "2009–2013", "keterangan": "", "foto": ""}, {"id": "kepala-9", "nama": "Warsono, S.H.I.", "masa": "2013–2016", "keterangan": "", "foto": ""}, {"id": "kepala-10", "nama": "H. Isa, S.Ag., M.M.Pd.", "masa": "2016–2018", "keterangan": "", "foto": ""}, {"id": "kepala-11", "nama": "Aceng Salman HAS, S.Th.I.", "masa": "2019–2021", "keterangan": "", "foto": ""}, {"id": "kepala-12", "nama": "Drs. H. Ahmad Saprudin, S.Ag.", "masa": "2021–2023", "keterangan": "", "foto": ""}, {"id": "kepala-13", "nama": "Dede Suryadi, S.H.I.", "masa": "2023–sekarang", "keterangan": "Plt. sejak 2023, kemudian definitif.", "foto": ""}];
-function kepalaLoadData(){
- try{const raw=localStorage.getItem(KEPALA_HISTORY_KEY);if(raw){const d=JSON.parse(raw);if(Array.isArray(d))return d;}}catch(e){}
- return KEPALA_DEFAULT.map(x=>({...x}));
-}
-let kepalaHistoryData=kepalaLoadData();
-function kepalaSaveData(){try{localStorage.setItem(KEPALA_HISTORY_KEY,JSON.stringify(kepalaHistoryData));return true}catch(e){alert('Data belum dapat disimpan di browser. Penyimpanan lokal penuh.');return false}}
-function kepalaEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function kepalaInitial(n){const x=String(n||'K').trim();return x?x.charAt(0).toUpperCase():'K'}
-function findKepala(id){return kepalaHistoryData.find(x=>x.id===id)}
+const KEPALA_BUCKET='kepala-kua';
+const KEPALA_MAX_PHOTO_BYTES=500*1024;
+let kepalaHistoryData=[];
 let kepalaSlideIndex=0;
 let kepalaSlideTimer=null;
 
 function kepalaEsc(v){
-  return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
 }
 function kepalaInitial(v){
   const s=String(v??'').trim();
   return s ? s.charAt(0).toUpperCase() : 'K';
 }
+function findKepala(id){return kepalaHistoryData.find(x=>x.id===id)}
+
+async function loadKepalaData(){
+  try{
+    const {data,error}=await supabaseClient
+      .from('kepala_kua')
+      .select('*')
+      .eq('aktif',true)
+      .order('urutan',{ascending:true})
+      .order('nama',{ascending:true});
+    if(error)throw error;
+    kepalaHistoryData=(Array.isArray(data)?data:[]).map(x=>({
+      id:x.id,
+      nama:x.nama||'',
+      masa:x.masa||'',
+      keterangan:x.keterangan||'',
+      foto:x.foto_url||'',
+      urutan:Number.isFinite(Number(x.urutan))?Number(x.urutan):0,
+      aktif:x.aktif!==false
+    }));
+    renderKepalaHistory();
+    renderKepalaAdminList();
+  }catch(e){
+    console.error('Load Kepala KUA:',e);
+    kepalaHistoryData=[];
+    const body=document.getElementById('kepalaHistoryBody');
+    if(body)body.innerHTML='<div style="text-align:center;color:#b42318;padding:35px">Data Kepala KUA belum dapat dimuat. Silakan muat ulang halaman.</div>';
+    const box=document.getElementById('kepalaAdminList');
+    if(box)box.innerHTML='<div style="text-align:center;color:#b42318;font-size:12px;padding:20px">Data Kepala KUA belum dapat dimuat.</div>';
+  }
+}
+
 function renderKepalaHistory(){
   const body=document.getElementById('kepalaHistoryBody');
   const dots=document.getElementById('kepalaSliderDots');
   if(!body)return;
-
   if(!Array.isArray(kepalaHistoryData)||kepalaHistoryData.length===0){
     body.innerHTML='<div style="text-align:center;color:#687a72;padding:35px">Belum ada data Kepala KUA.</div>';
     if(dots)dots.innerHTML='';
+    kepalaStopAuto();
     return;
   }
-
   if(kepalaSlideIndex<0||kepalaSlideIndex>=kepalaHistoryData.length)kepalaSlideIndex=0;
-
   body.innerHTML=kepalaHistoryData.map((x,i)=>{
     const foto=x.foto
       ? '<img class="kepala-slide-photo" src="'+kepalaEsc(x.foto)+'" alt="Foto '+kepalaEsc(x.nama)+'">'
@@ -1923,7 +1944,6 @@ function renderKepalaHistory(){
       '</div>'+
     '</article>';
   }).join('');
-
   if(dots){
     dots.innerHTML=kepalaHistoryData.map((x,i)=>
       '<button class="kepala-slider-dot '+(i===kepalaSlideIndex?'active':'')+'" type="button" aria-label="Slide '+(i+1)+'" onclick="goKepalaSlide('+i+')"></button>'
@@ -1931,18 +1951,12 @@ function renderKepalaHistory(){
   }
   kepalaStartAuto();
 }
-
 function updateKepalaSlider(){
   const slides=document.querySelectorAll('#kepalaHistoryBody .kepala-slide');
   slides.forEach((s,i)=>s.classList.toggle('active',i===kepalaSlideIndex));
   document.querySelectorAll('#kepalaSliderDots .kepala-slider-dot').forEach((d,i)=>d.classList.toggle('active',i===kepalaSlideIndex));
   const p=document.getElementById('kepalaSliderProgress');
-  if(p){
-    p.style.transition='none';p.style.width='0%';
-    requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-      p.style.transition='width 5s linear';p.style.width='100%';
-    })});
-  }
+  if(p){p.style.transition='none';p.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{p.style.transition='width 5s linear';p.style.width='100%';})});}
 }
 function goKepalaSlide(i){
   if(!Array.isArray(kepalaHistoryData)||kepalaHistoryData.length<2)return;
@@ -1957,59 +1971,117 @@ function kepalaStartAuto(){
   if(!Array.isArray(kepalaHistoryData)||kepalaHistoryData.length<2)return;
   kepalaSlideTimer=setInterval(()=>goKepalaSlide(kepalaSlideIndex+1),5000);
   const p=document.getElementById('kepalaSliderProgress');
-  if(p){
-    p.style.transition='none';p.style.width='0%';
-    requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-      p.style.transition='width 5s linear';p.style.width='100%';
-    })});
-  }
+  if(p){p.style.transition='none';p.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{p.style.transition='width 5s linear';p.style.width='100%';})});}
 }
-function kepalaStopAuto(){
-  if(kepalaSlideTimer){clearInterval(kepalaSlideTimer);kepalaSlideTimer=null;}
-}
+function kepalaStopAuto(){if(kepalaSlideTimer){clearInterval(kepalaSlideTimer);kepalaSlideTimer=null;}}
+
 function openKepalaAdmin(){
- if(typeof adminSessionIsActive==='function'&&!adminSessionIsActive()){if(typeof openAdminLogin==='function')openAdminLogin();return}
- renderKepalaAdminList();document.getElementById('kepalaAdminModal')?.classList.add('show');
+  if(typeof adminSessionIsActive==='function'&&!adminSessionIsActive()){if(typeof openAdminLogin==='function')openAdminLogin();return}
+  renderKepalaAdminList();document.getElementById('kepalaAdminModal')?.classList.add('show');
 }
 function closeKepalaAdmin(){document.getElementById('kepalaAdminModal')?.classList.remove('show')}
 function renderKepalaAdminList(){
- const box=document.getElementById('kepalaAdminList');if(!box)return;
- if(!kepalaHistoryData.length){box.innerHTML='<div style="text-align:center;color:#687a72;font-size:12px;padding:20px">Belum ada data.</div>';return}
- box.innerHTML=kepalaHistoryData.map((x,i)=>{
-  const thumb=x.foto?'<img class="kepala-admin-thumb" src="'+kepalaEsc(x.foto)+'" alt="">':'<div class="kepala-placeholder">'+kepalaEsc(kepalaInitial(x.nama))+'</div>';
-  return '<div class="kepala-admin-row">'+thumb+'<div><strong>'+kepalaEsc(x.nama)+'</strong><small>'+kepalaEsc(x.masa)+(x.keterangan?' · '+kepalaEsc(x.keterangan):'')+'</small><input class="kepala-photo-input" id="kepala-photo-'+i+'" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleKepalaPhoto(event,\''+x.id+'\')"></div><div class="kepala-admin-actions"><button class="primary" type="button" onclick="openKepalaEdit(\''+x.id+'\')">Edit</button><button type="button" onclick="triggerKepalaPhoto(\''+x.id+'\')">Ganti Foto</button>'+(x.foto?'<button type="button" onclick="removeKepalaPhoto(\''+x.id+'\')">Hapus Foto</button>':'')+'<button class="danger" type="button" onclick="deleteKepalaRecord(\''+x.id+'\')">Hapus Data</button></div></div>';
- }).join('');
+  const box=document.getElementById('kepalaAdminList');if(!box)return;
+  if(!kepalaHistoryData.length){box.innerHTML='<div style="text-align:center;color:#687a72;font-size:12px;padding:20px">Belum ada data.</div>';return}
+  box.innerHTML=kepalaHistoryData.map((x,i)=>{
+    const thumb=x.foto?'<img class="kepala-admin-thumb" src="'+kepalaEsc(x.foto)+'" alt="">':'<div class="kepala-placeholder">'+kepalaEsc(kepalaInitial(x.nama))+'</div>';
+    return '<div class="kepala-admin-row">'+thumb+'<div><strong>'+kepalaEsc(x.nama)+'</strong><small>'+kepalaEsc(x.masa)+(x.keterangan?' · '+kepalaEsc(x.keterangan):'')+'</small><input class="kepala-photo-input" id="kepala-photo-'+i+'" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleKepalaPhoto(event,\''+x.id+'\')"></div><div class="kepala-admin-actions"><button class="primary" type="button" onclick="openKepalaEdit(\''+x.id+'\')">Edit</button><button type="button" onclick="triggerKepalaPhoto(\''+x.id+'\')">Ganti Foto</button>'+(x.foto?'<button type="button" onclick="removeKepalaPhoto(\''+x.id+'\')">Hapus Foto</button>':'')+'<button class="danger" type="button" onclick="deleteKepalaRecord(\''+x.id+'\')">Hapus Data</button></div></div>';
+  }).join('');
 }
-function openKepalaEdit(id){const x=findKepala(id);if(!x)return;document.getElementById('kepalaEditId').value=x.id;document.getElementById('kepalaEditNama').value=x.nama||'';document.getElementById('kepalaEditMasa').value=x.masa||'';document.getElementById('kepalaEditKet').value=x.keterangan||'';document.getElementById('kepalaEditModal')?.classList.add('show')}
+function openKepalaEdit(id){
+  const x=findKepala(id);if(!x)return;
+  document.getElementById('kepalaEditId').value=x.id;
+  document.getElementById('kepalaEditNama').value=x.nama||'';
+  document.getElementById('kepalaEditMasa').value=x.masa||'';
+  document.getElementById('kepalaEditKet').value=x.keterangan||'';
+  document.getElementById('kepalaEditModal')?.classList.add('show');
+}
 function closeKepalaEdit(){document.getElementById('kepalaEditModal')?.classList.remove('show')}
-function saveKepalaEdit(){
- const x=findKepala(document.getElementById('kepalaEditId').value);if(!x)return;
- const nama=document.getElementById('kepalaEditNama').value.trim(),masa=document.getElementById('kepalaEditMasa').value.trim(),ket=document.getElementById('kepalaEditKet').value.trim();
- if(!nama||!masa){alert('Nama dan masa jabatan wajib diisi.');return}
- x.nama=nama;x.masa=masa;x.keterangan=ket;
- if(kepalaSaveData()){renderKepalaHistory();renderKepalaAdminList();closeKepalaEdit()}
+async function saveKepalaEdit(){
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  const id=document.getElementById('kepalaEditId').value;
+  const x=findKepala(id);if(!x)return;
+  const nama=document.getElementById('kepalaEditNama').value.trim();
+  const masa=document.getElementById('kepalaEditMasa').value.trim();
+  const ket=document.getElementById('kepalaEditKet').value.trim();
+  if(!nama||!masa){alert('Nama dan masa jabatan wajib diisi.');return}
+  try{
+    const {error}=await supabaseClient.from('kepala_kua').update({nama,masa,keterangan:ket,updated_at:new Date().toISOString()}).eq('id',id);
+    if(error)throw error;
+    await loadKepalaData();closeKepalaEdit();
+  }catch(e){console.error('Simpan Kepala KUA:',e);alert('Data belum berhasil disimpan: '+(e.message||'terjadi kesalahan.'));}
 }
-function addKepalaRecord(){
- const nama=prompt('Nama Kepala KUA:');if(nama===null)return;if(!nama.trim()){alert('Nama wajib diisi.');return}
- const masa=prompt('Masa jabatan (tahun saja, contoh 2024–2026):');if(masa===null)return;if(!masa.trim()){alert('Masa jabatan wajib diisi.');return}
- const ket=prompt('Keterangan (opsional):')??'';
- kepalaHistoryData.push({id:'kepala-'+Date.now(),nama:nama.trim(),masa:masa.trim(),keterangan:ket.trim(),foto:''});
- if(kepalaSaveData()){renderKepalaHistory();renderKepalaAdminList()}
+async function addKepalaRecord(){
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  const nama=prompt('Nama Kepala KUA:');if(nama===null)return;if(!nama.trim()){alert('Nama wajib diisi.');return}
+  const masa=prompt('Masa jabatan (tahun saja, contoh 2024–2026):');if(masa===null)return;if(!masa.trim()){alert('Masa jabatan wajib diisi.');return}
+  const ket=prompt('Keterangan (opsional):')??'';
+  const id='kepala-'+Date.now();
+  const max=(kepalaHistoryData.reduce((m,x)=>Math.max(m,Number(x.urutan)||0),0)||0)+1;
+  try{
+    const {error}=await supabaseClient.from('kepala_kua').insert({id,nama:nama.trim(),masa:masa.trim(),keterangan:ket.trim(),foto_url:'',urutan:max,aktif:true,updated_at:new Date().toISOString()});
+    if(error)throw error;
+    await loadKepalaData();
+  }catch(e){console.error('Tambah Kepala KUA:',e);alert('Data belum berhasil ditambahkan: '+(e.message||'terjadi kesalahan.'));}
 }
-function deleteKepalaRecord(id){const x=findKepala(id);if(!x)return;if(!confirm('Hapus data '+x.nama+'?'))return;kepalaHistoryData=kepalaHistoryData.filter(y=>y.id!==id);if(kepalaSaveData()){renderKepalaHistory();renderKepalaAdminList()}}
-function resetKepalaData(){if(!confirm('Kembalikan data Sejarah Kepala KUA ke data awal?'))return;kepalaHistoryData=KEPALA_DEFAULT.map(x=>({...x}));try{localStorage.removeItem(KEPALA_HISTORY_KEY)}catch(e){}renderKepalaHistory();renderKepalaAdminList()}
+async function deleteKepalaRecord(id){
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  const x=findKepala(id);if(!x)return;if(!confirm('Hapus data '+x.nama+'?'))return;
+  try{
+    if(x.foto)await removeKepalaPhotoByUrl(x.foto);
+    const {error}=await supabaseClient.from('kepala_kua').delete().eq('id',id);
+    if(error)throw error;
+    await loadKepalaData();
+  }catch(e){console.error('Hapus Kepala KUA:',e);alert('Data belum dapat dihapus: '+(e.message||'terjadi kesalahan.'));}
+}
+function resetKepalaData(){loadKepalaData();}
 function triggerKepalaPhoto(id){
- if(typeof adminSessionIsActive==='function'&&!adminSessionIsActive()){openAdminLogin();return}
- const i=kepalaHistoryData.findIndex(x=>x.id===id);if(i<0)return;document.getElementById('kepala-photo-'+i)?.click();
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  const i=kepalaHistoryData.findIndex(x=>x.id===id);if(i<0)return;
+  document.getElementById('kepala-photo-'+i)?.click();
 }
-function handleKepalaPhoto(event,id){
- const file=event.target.files?.[0];event.target.value='';if(!file)return;
- if(!['image/jpeg','image/png','image/webp'].includes(file.type)){alert('Gunakan foto JPG, PNG, atau WEBP.');return}
- if(file.size>KEPALA_MAX_PHOTO_BYTES){alert('Foto Kepala KUA maksimal 800 KB. Silakan pilih foto yang lebih kecil.');return}
- const reader=new FileReader();reader.onload=()=>{const x=findKepala(id);if(!x)return;x.foto=reader.result;if(kepalaSaveData()){renderKepalaHistory();renderKepalaAdminList()}};reader.readAsDataURL(file);
+async function uploadKepalaPhoto(id,file){
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Gunakan foto JPG, PNG, atau WEBP.');
+  if(file.size>KEPALA_MAX_PHOTO_BYTES)throw new Error('Foto Kepala KUA maksimal 500 KB.');
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+  const path=id+'-'+Date.now()+'.'+ext;
+  const {error}=await supabaseClient.storage.from(KEPALA_BUCKET).upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw error;
+  const {data}=supabaseClient.storage.from(KEPALA_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
 }
-function removeKepalaPhoto(id){const x=findKepala(id);if(!x)return;if(!confirm('Hapus foto '+x.nama+'?'))return;x.foto='';if(kepalaSaveData()){renderKepalaHistory();renderKepalaAdminList()}}
-document.addEventListener('DOMContentLoaded',renderKepalaHistory);
+async function removeKepalaPhotoByUrl(url){
+  const marker='/storage/v1/object/public/'+KEPALA_BUCKET+'/';
+  const idx=String(url||'').indexOf(marker);if(idx<0)return;
+  const path=decodeURIComponent(String(url).slice(idx+marker.length));
+  if(path)await supabaseClient.storage.from(KEPALA_BUCKET).remove([path]);
+}
+async function handleKepalaPhoto(event,id){
+  const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  try{
+    const x=findKepala(id);if(!x)throw new Error('Data Kepala KUA tidak ditemukan.');
+    const oldUrl=x.foto||'';
+    const foto_url=await uploadKepalaPhoto(id,file);
+    const {error}=await supabaseClient.from('kepala_kua').update({foto_url,updated_at:new Date().toISOString()}).eq('id',id);
+    if(error)throw error;
+    if(oldUrl)await removeKepalaPhotoByUrl(oldUrl);
+    await loadKepalaData();
+  }catch(e){console.error('Foto Kepala KUA:',e);alert('Foto belum berhasil disimpan: '+(e.message||'terjadi kesalahan.'));}
+}
+async function removeKepalaPhoto(id){
+  if(typeof requireAdmin==='function'&&!requireAdmin())return;
+  const x=findKepala(id);if(!x||!x.foto)return;
+  if(!confirm('Hapus foto '+x.nama+'?'))return;
+  try{
+    await removeKepalaPhotoByUrl(x.foto);
+    const {error}=await supabaseClient.from('kepala_kua').update({foto_url:'',updated_at:new Date().toISOString()}).eq('id',id);
+    if(error)throw error;
+    await loadKepalaData();
+  }catch(e){console.error('Hapus foto Kepala KUA:',e);alert('Foto belum dapat dihapus: '+(e.message||'terjadi kesalahan.'));}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{ loadKepalaData(); });
 
 document.addEventListener('DOMContentLoaded',function(){
   const s=document.getElementById('kepalaSliderWrap');
