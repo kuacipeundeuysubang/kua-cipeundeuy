@@ -968,7 +968,7 @@ h1 span{color:#07583f!important}
         <strong>KANTOR URUSAN AGAMA KECAMATAN CIPEUNDEUY</strong>
       </div>
     </a>
-    <button class="admin-trigger" type="button" onclick="openAdminLogin()" title="Masuk Admin" aria-label="Masuk Admin"><span class="admin-lock">▣</span><span>Masuk Admin</span></button>
+    <button class="admin-trigger" type="button" onclick="openAdminLogin()" title="Masuk Admin" aria-label="Masuk Admin"><span class="admin-lock">▣</span><span class="admin-trigger-label">Masuk Admin</span></button>
   </div>
 </header>
 
@@ -1317,6 +1317,7 @@ function startNikahSlider(){
   if(Math.ceil(getVisibleNikah().length/2)>1) nikahTimer=setInterval(()=>goNikah(nikahIndex+1),5000);
 }
 initNikahData();
+initAdminAuth();
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1327,8 +1328,6 @@ function showPage(id){
 }
 
 /* ===== ADMIN FOTO PEGAWAI ===== */
-const ADMIN_SESSION_KEY = 'kua_cipeundeuy_admin_session';
-
 let nikahDraftSuami='', nikahDraftIstri='';
 function requireAdmin(){
   if(!adminSessionIsActive()){ openAdminLogin(); return false; }
@@ -1472,12 +1471,49 @@ function saveNikahForm(){
 
 let ADMIN_MEMORY_SESSION=false;
 function adminSessionIsActive(){
-  if(ADMIN_MEMORY_SESSION) return true;
-  try{return localStorage.getItem(ADMIN_SESSION_KEY)==='1';}catch(e){return false;}
+  return ADMIN_MEMORY_SESSION===true;
 }
 function setAdminSession(active){
   ADMIN_MEMORY_SESSION=!!active;
-  try{if(active) localStorage.setItem(ADMIN_SESSION_KEY,'1'); else localStorage.removeItem(ADMIN_SESSION_KEY);}catch(e){}
+  updateAdminTrigger();
+}
+function updateAdminTrigger(){
+  const btn=document.querySelector('.admin-trigger');
+  if(!btn)return;
+  const label=btn.querySelector('.admin-trigger-label');
+  if(adminSessionIsActive()){
+    btn.setAttribute('title','Keluar Admin');
+    btn.setAttribute('aria-label','Keluar Admin');
+    btn.setAttribute('onclick','logoutAdmin()');
+    if(label) label.textContent='Keluar Admin';
+  }else{
+    btn.setAttribute('title','Masuk Admin');
+    btn.setAttribute('aria-label','Masuk Admin');
+    btn.setAttribute('onclick','openAdminLogin()');
+    if(label) label.textContent='Masuk Admin';
+  }
+}
+async function initAdminAuth(){
+  try{
+    const {data}=await supabaseClient.auth.getSession();
+    const user=data?.session?.user;
+    setAdminSession(!!user);
+    document.body.classList.toggle('admin-mode',!!user);
+    document.getElementById('adminBadge')?.classList.toggle('show',!!user);
+    const emailBadge=document.getElementById('adminSignedEmail');
+    if(emailBadge) emailBadge.textContent=user?.email||'';
+  }catch(e){
+    console.warn('Supabase session:',e);
+    setAdminSession(false);
+  }
+  supabaseClient.auth.onAuthStateChange((_event,session)=>{
+    const user=session?.user;
+    setAdminSession(!!user);
+    document.body.classList.toggle('admin-mode',!!user);
+    document.getElementById('adminBadge')?.classList.toggle('show',!!user);
+    const emailBadge=document.getElementById('adminSignedEmail');
+    if(emailBadge) emailBadge.textContent=user?.email||'';
+  });
 }
 function openAdminLogin(){
   if(adminSessionIsActive()){
@@ -1779,7 +1815,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
       <div id="nikahAdminError" class="admin-error"></div>
       <div class="section-title" style="margin-top:20px"><div class="kicker">Pengumuman Tersimpan</div><h2 style="font-size:18px">Daftar Pengumuman</h2></div>
       <div id="nikahAdminList" class="announce-list"></div>
-      <div class="admin-note"><b>Aturan publikasi:</b> mode Otomatis = tampil H-7 s.d. hari akad; sebelum H-7 menunggu, setelah akad otomatis tersembunyi. Mode manual dapat dipakai bila perlu. Foto pengumuman dibatasi maksimal 500 KB dan diproses di browser. Pada tahap produksi, data ini sebaiknya dipindahkan ke database dan storage terautentikasi agar dapat diedit dari perangkat lain.</div>
+      <div class="admin-note"><b>Aturan publikasi:</b> mode Otomatis = tampil H-7 sampai hari akad; sebelum H-7 menunggu, setelah akad otomatis tersembunyi. Mode manual dapat dipakai bila diperlukan. Foto pengumuman dibatasi maksimal 500 KB dan diproses di browser.</div>
     </div>
   </div>
 </div>
@@ -1807,9 +1843,8 @@ document.addEventListener('DOMContentLoaded',initEmployees);
         <button class="primary" type="button" onclick="loginAdmin()">Masuk</button>
       </div>
       <div class="admin-note">
-        Mode admin pada file HTML ini adalah <b>prototipe lokal</b>. Untuk website yang benar-benar aman,
-        login dan penyimpanan foto sebaiknya dipindahkan ke backend/authentication (misalnya Supabase).
-        Password tidak seharusnya disimpan sebagai rahasia di dalam HTML publik.
+        Login admin menggunakan <b>Supabase Auth</b>. Sesi login dikelola oleh Supabase, dan tombol <b>Keluar Admin</b> tersedia setelah berhasil masuk.
+        Password tidak disimpan di dalam HTML publik.
       </div>
     </div>
   </div>
@@ -1851,7 +1886,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
   <div class="admin-modal-body">
    <div class="admin-actions" style="margin-top:0"><button class="primary" type="button" onclick="addKepalaRecord()">＋ Tambah Kepala KUA</button><button class="secondary" type="button" onclick="resetKepalaData()">Reset Data Awal</button></div>
    <div id="kepalaAdminError" class="admin-error"></div><div id="kepalaAdminList" class="kepala-admin-list"></div>
-   <div class="admin-note"><b>Catatan:</b> data dan foto tersimpan di browser perangkat ini (localStorage), sehingga belum otomatis tersinkron ke perangkat lain.</div>
+   <div class="admin-note"><b>Catatan:</b> data dan foto Kepala KUA tersimpan di Supabase dan dapat dikelola dari perangkat yang login sebagai admin.</div>
   </div>
  </div>
 </div>
