@@ -477,6 +477,7 @@ body.admin-mode .photo-actions{display:block}
 }
 .admin-modal-head h3{margin:0 0 4px;font-size:19px}
 .admin-modal-head p{margin:0;font-size:12px;opacity:.85}
+.admin-modal-close{position:absolute;top:12px;right:14px;width:36px;height:36px;border:1px solid rgba(255,255,255,.42);border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}.admin-modal-close:hover{background:rgba(255,255,255,.2)}
 .admin-modal-body{padding:20px}
 .admin-field{margin-bottom:13px}
 .admin-field label{display:block;font-size:11px;font-weight:700;color:#53635e;margin-bottom:6px}
@@ -677,6 +678,7 @@ h1 span{color:#0a5f45}
 .announce-preview{align-items:center;min-width:0;gap:12px;padding:11px 12px}
 .announce-preview img{width:88px;height:66px;flex:0 0 auto}
 .announce-preview span{font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.announce-preview .photo-remove-btn{margin-left:auto;flex:0 0 auto;border:1px solid #e4b6ad;background:#fff;color:#a33a2a;border-radius:8px;padding:7px 9px;font-size:11px;font-weight:700;cursor:pointer}.admin-success{font-size:11px;color:#0b6b4f;min-height:16px;margin-top:7px;line-height:1.45}
 .admin-actions{gap:10px;margin-top:18px}
 .admin-actions button{min-height:43px;font-size:13px;transition:filter .15s,transform .15s}
 .admin-actions button:hover,.announce-item button:hover{filter:brightness(.97)}
@@ -698,6 +700,7 @@ h1 span{color:#0a5f45}
   .announce-modal .admin-modal,.modal-backdrop .admin-modal{width:100%;max-height:100dvh;height:100dvh;border-radius:0;border-left:0;border-right:0}
   .admin-modal-head{padding:18px 17px 15px}
   .admin-modal-head h3{font-size:18px}
+.admin-modal-close{top:10px;right:11px;width:38px;height:38px;font-size:25px}
   .admin-modal-body{padding:17px 16px calc(20px + env(safe-area-inset-bottom))}
   .announce-form-grid{grid-template-columns:minmax(0,1fr);gap:13px}
   .announce-form-grid .full{grid-column:auto}
@@ -709,6 +712,7 @@ h1 span{color:#0a5f45}
   .announce-item .meta{flex:1 1 calc(100% - 84px)}
   .announce-item .actions{width:100%;display:grid;grid-template-columns:1fr 1fr;flex-direction:row;margin-top:2px}
   .announce-item button{min-height:38px;font-size:12px}
+.announce-preview .photo-remove-btn{margin-left:0;width:100%;min-height:40px}
   .admin-badge{align-items:stretch}
   .admin-badge>span:last-child{width:100%;justify-content:stretch!important}
   .admin-badge>span:last-child button{flex:1}
@@ -1583,7 +1587,7 @@ function openAnnouncementManager(){
   renderNikahAdminList();
 }
 function closeAnnouncementManager(){ document.getElementById('announcementModal').classList.remove('show'); }
-function resetNikahForm(){
+function resetNikahForm(clearMessage=true){
   document.getElementById('nikahEditId').value='';
   document.getElementById('nikahSuami').value='';
   document.getElementById('nikahIstri').value='';
@@ -1598,7 +1602,7 @@ function resetNikahForm(){
     const p=document.getElementById('nikahPreview'+k); if(p)p.style.display='none';
     const st=document.getElementById('nikahPhotoStatus'+k); if(st){st.textContent='';st.className='photo-limit';}
   });
-  document.getElementById('nikahAdminError').textContent='';
+  if(clearMessage){ const e=document.getElementById('nikahAdminError'); e.textContent=''; e.className='admin-error'; }
 }
 function editNikah(id){
   if(!requireAdmin()) return;
@@ -1613,7 +1617,10 @@ function editNikah(id){
   nikahDraftSuami=x.fotoSuami||''; nikahDraftIstri=x.fotoIstri||'';
   setNikahPreview('Suami',nikahDraftSuami,'Foto calon suami tersimpan. Pilih foto baru bila ingin menggantinya.');
   setNikahPreview('Istri',nikahDraftIstri,'Foto calon istri tersimpan. Pilih foto baru bila ingin menggantinya.');
-  document.getElementById('nikahAdminError').textContent='';
+  const msg=document.getElementById('nikahAdminError');
+  msg.className='admin-error'; msg.textContent='';
+  const modalBody=document.querySelector('#announcementModal .admin-modal-body');
+  if(modalBody) modalBody.scrollTo({top:0,behavior:'smooth'});
 }
 async function deleteNikah(id){
   if(!requireAdmin()) return;
@@ -1624,7 +1631,7 @@ async function deleteNikah(id){
     await deleteNikahFromSupabase(x);
     nikahData=nikahData.filter(v=>v.id!==id);
     saveNikahData();
-    nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList(); resetNikahForm();
+    nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList(); resetNikahForm(false);
     if(err){err.className='admin-success';err.textContent='Pengumuman berhasil dihapus.';}
   }catch(e){
     console.error('deleteNikah:',e);
@@ -1660,6 +1667,13 @@ function renderNikahAdminList(){
 function setNikahPreview(kind,data,text){
   const p=document.getElementById('nikahPreview'+kind), img=document.getElementById('nikahPreviewImg'+kind), span=document.getElementById('nikahPreviewText'+kind);
   if(data){img.src=data;p.style.display='flex';span.textContent=text||'Foto siap digunakan.';}else{p.style.display='none';img.removeAttribute('src');span.textContent='';}
+}
+function removeNikahPhoto(kind){
+  if(kind==='Suami') nikahDraftSuami=''; else nikahDraftIstri='';
+  const input=document.getElementById('nikahFoto'+kind); if(input) input.value='';
+  const p=document.getElementById('nikahPreview'+kind); if(p) p.style.display='none';
+  const status=document.getElementById('nikahPhotoStatus'+kind);
+  if(status){status.className='photo-limit bad';status.textContent='Foto dihapus dari formulir. Pilih foto baru sebelum menyimpan.';}
 }
 async function handleNikahPhoto(event,kind){
   const file=event.target.files?.[0]; if(!file)return;
@@ -1724,8 +1738,9 @@ async function saveNikahForm(){
     else nikahData.push(saved);
     saveNikahData();
     nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList();
-    err.className='admin-success'; err.textContent=id?'Pengumuman berhasil diperbarui.':'Pengumuman berhasil disimpan.';
-    resetNikahForm();
+    err.className='admin-success'; err.textContent=id?'Pengumuman berhasil diperbarui dan tersimpan di database.':'Pengumuman berhasil disimpan di database.';
+    const modalBody=document.querySelector('#announcementModal .admin-modal-body');
+    if(modalBody) modalBody.scrollTo({top:0,behavior:'smooth'});
   }catch(e){
     console.error('saveNikahForm:',e);
     err.className='admin-error'; err.textContent=e.message||'Pengumuman gagal disimpan.';
@@ -2045,6 +2060,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 <div id="announcementModal" class="modal-backdrop announce-modal" onclick="if(event.target===this) closeAnnouncementManager()">
   <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="announcementTitle">
     <div class="admin-modal-head">
+      <button class="admin-modal-close" type="button" onclick="closeAnnouncementManager()" aria-label="Tutup">&times;</button>
       <h3 id="announcementTitle">Kelola Pengumuman Kehendak Nikah</h3>
       <p>Data dan foto dapat disiapkan jauh sebelum akad. Publikasi dapat otomatis mulai H-7, ditampilkan manual, atau disembunyikan.</p>
     </div>
@@ -2062,21 +2078,21 @@ document.addEventListener('DOMContentLoaded',initEmployees);
           <input id="nikahFotoSuami" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleNikahPhoto(event,'Suami')">
           <div class="photo-limit">Maksimum <b>500 KB</b> per foto. JPG, PNG, atau WebP.</div>
           <div id="nikahPhotoStatusSuami" class="photo-limit"></div>
-          <div id="nikahPreviewSuami" class="announce-preview" style="display:none;margin-top:8px"><img id="nikahPreviewImgSuami" alt="Pratinjau foto calon suami"><span id="nikahPreviewTextSuami">Foto siap digunakan.</span></div>
+          <div id="nikahPreviewSuami" class="announce-preview" style="display:none;margin-top:8px"><img id="nikahPreviewImgSuami" alt="Pratinjau foto calon suami"><span id="nikahPreviewTextSuami">Foto siap digunakan.</span><button class="photo-remove-btn" type="button" onclick="removeNikahPhoto('Suami')">Hapus foto</button></div>
         </div>
         <div class="admin-field">
           <label for="nikahFotoIstri">Foto calon istri</label>
           <input id="nikahFotoIstri" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleNikahPhoto(event,'Istri')">
           <div class="photo-limit">Maksimum <b>500 KB</b> per foto. JPG, PNG, atau WebP.</div>
           <div id="nikahPhotoStatusIstri" class="photo-limit"></div>
-          <div id="nikahPreviewIstri" class="announce-preview" style="display:none;margin-top:8px"><img id="nikahPreviewImgIstri" alt="Pratinjau foto calon istri"><span id="nikahPreviewTextIstri">Foto siap digunakan.</span></div>
+          <div id="nikahPreviewIstri" class="announce-preview" style="display:none;margin-top:8px"><img id="nikahPreviewImgIstri" alt="Pratinjau foto calon istri"><span id="nikahPreviewTextIstri">Foto siap digunakan.</span><button class="photo-remove-btn" type="button" onclick="removeNikahPhoto('Istri')">Hapus foto</button></div>
         </div>
       </div>
       <div class="admin-actions">
         <button class="secondary" type="button" onclick="resetNikahForm()">Bersihkan</button>
         <button class="primary" type="button" onclick="saveNikahForm()">Simpan Pengumuman</button>
       </div>
-      <div id="nikahAdminError" class="admin-error"></div>
+      <div id="nikahAdminError" class="admin-error" role="status" aria-live="polite"></div>
       <div class="section-title" style="margin-top:20px"><div class="kicker">Pengumuman Tersimpan</div><h2 style="font-size:18px">Daftar Pengumuman</h2></div>
       <div id="nikahAdminList" class="announce-list"></div>
       <div class="admin-note"><b>Aturan publikasi:</b> mode Otomatis = tampil H-7 sampai hari akad; sebelum H-7 menunggu, setelah akad otomatis tersembunyi. Mode manual dapat dipakai bila diperlukan. Foto pengumuman dibatasi maksimal 500 KB dan diproses di browser.</div>
@@ -2088,6 +2104,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 <div id="adminModal" class="modal-backdrop" onclick="if(event.target===this) closeAdminLogin()">
   <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
     <div class="admin-modal-head">
+      <button class="admin-modal-close" type="button" onclick="closeAdminLogin()" aria-label="Tutup">&times;</button>
       <h3 id="adminTitle">Masuk Admin</h3>
       <p>Kelola foto pegawai dan konten yang disiapkan untuk administrator.</p>
     </div>
@@ -2117,7 +2134,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 <!-- MODAL KELOLA PEGAWAI -->
 <div id="employeeAdminModal" class="modal-backdrop" onclick="if(event.target===this) closeEmployeeManager()">
  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="employeeAdminTitle">
-  <div class="admin-modal-head"><h3 id="employeeAdminTitle">Kelola Data Pegawai</h3><p>Data pegawai tersimpan di Supabase dan dapat dikelola dari perangkat mana pun setelah login admin.</p></div>
+  <div class="admin-modal-head"><button class="admin-modal-close" type="button" onclick="closeEmployeeManager()" aria-label="Tutup">&times;</button><h3 id="employeeAdminTitle">Kelola Data Pegawai</h3><p>Data pegawai tersimpan di Supabase dan dapat dikelola dari perangkat mana pun setelah login admin.</p></div>
   <div class="admin-modal-body">
    <div class="admin-actions" style="margin-top:0"><button class="primary" type="button" onclick="addEmployee()">＋ Tambah Pegawai</button><button class="secondary" type="button" onclick="closeEmployeeManager()">Tutup</button></div>
    <div id="employeeAdminError" class="admin-error"></div>
@@ -2127,7 +2144,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 </div>
 <div id="employeeEditModal" class="modal-backdrop" onclick="if(event.target===this) closeEmployeeEdit()">
  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="employeeEditTitle">
-  <div class="admin-modal-head"><h3 id="employeeEditTitle">Edit Data Pegawai</h3><p>Nama, jabatan, NIP, jenjang, urutan, status, dan foto dapat diperbarui tanpa mengubah HTML.</p></div>
+  <div class="admin-modal-head"><button class="admin-modal-close" type="button" onclick="closeEmployeeEdit()" aria-label="Tutup">&times;</button><h3 id="employeeEditTitle">Edit Data Pegawai</h3><p>Nama, jabatan, NIP, jenjang, urutan, status, dan foto dapat diperbarui tanpa mengubah HTML.</p></div>
   <div class="admin-modal-body">
    <div class="announce-form-grid">
     <div class="admin-field"><label for="employeeEditNama">Nama Pegawai</label><input id="employeeEditNama" type="text" placeholder="Nama lengkap"></div>
@@ -2146,7 +2163,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 <!-- MODAL KELOLA SEJARAH KEPALA KUA -->
 <div id="kepalaAdminModal" class="modal-backdrop" onclick="if(event.target===this) closeKepalaAdmin()">
  <div class="admin-modal" role="dialog" aria-modal="true">
-  <div class="admin-modal-head"><h3>Kelola Sejarah Kepala KUA</h3><p>Tambah, edit, ganti foto, atau hapus data Kepala KUA.</p></div>
+  <div class="admin-modal-head"><button class="admin-modal-close" type="button" onclick="closeKepalaAdmin()" aria-label="Tutup">&times;</button><h3>Kelola Sejarah Kepala KUA</h3><p>Tambah, edit, ganti foto, atau hapus data Kepala KUA.</p></div>
   <div class="admin-modal-body">
    <div class="admin-actions" style="margin-top:0"><button class="primary" type="button" onclick="addKepalaRecord()">＋ Tambah Kepala KUA</button><button class="secondary" type="button" onclick="resetKepalaData()">Reset Data Awal</button></div>
    <div id="kepalaAdminError" class="admin-error"></div><div id="kepalaAdminList" class="kepala-admin-list"></div>
@@ -2156,7 +2173,7 @@ document.addEventListener('DOMContentLoaded',initEmployees);
 </div>
 <div id="kepalaEditModal" class="modal-backdrop" onclick="if(event.target===this) closeKepalaEdit()">
  <div class="admin-modal" role="dialog" aria-modal="true">
-  <div class="admin-modal-head"><h3>Edit Data Kepala KUA</h3><p>Perubahan dapat dilakukan tanpa mengubah HTML.</p></div>
+  <div class="admin-modal-head"><button class="admin-modal-close" type="button" onclick="closeKepalaEdit()" aria-label="Tutup">&times;</button><h3>Edit Data Kepala KUA</h3><p>Perubahan dapat dilakukan tanpa mengubah HTML.</p></div>
   <div class="admin-modal-body">
    <input type="hidden" id="kepalaEditId">
    <div class="kepala-edit-grid">
@@ -2426,6 +2443,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
 <div id="galleryManagerModal" class="modal-backdrop gallery-publish-modal" onclick="if(event.target===this) closeGalleryManager()">
   <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="galleryManagerTitle">
     <div class="admin-modal-head gallery-publish-head">
+      <button class="admin-modal-close" type="button" onclick="closeGalleryManager()" aria-label="Tutup">&times;</button>
       <div><h3 id="galleryManagerTitle">Kelola Galeri & Publikasi</h3><p>Buat satu postingan untuk Galeri KUA, lalu siapkan publikasi ke Instagram dan TikTok.</p></div>
       <div class="social-state" aria-label="Status koneksi media sosial">
         <span class="social-state-badge" id="igConnectionBadge">◎ Instagram · Belum terhubung</span>
