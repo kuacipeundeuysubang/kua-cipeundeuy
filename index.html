@@ -417,6 +417,14 @@ h2{font-size:31px;line-height:1.1;margin-top:4px}
 .employee-avatar.photo{
   object-fit:cover;
   background:#fff;
+  border-radius:8px;
+}
+.employee-avatar.photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:8px !important;
+  display:block;
 }
 .employee-avatar.photo + .employee-info{}
 .employee-info{min-width:0}
@@ -1628,7 +1636,7 @@ function renderEmployees(){
   box.innerHTML=visibleEmployees.map(x=>{
     const id=employeeEsc(x.id), name=employeeEsc(x.nama||''), jab=employeeEsc(x.jabatan||'');
     const avatar=x.foto_url
-      ? `<div class="employee-avatar photo" data-avatar="${id}"><img src="${employeeEsc(x.foto_url)}" alt="Foto ${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;"></div>`
+      ? `<div class="employee-avatar photo" data-avatar="${id}"><img src="${employeeEsc(x.foto_url)}" alt="Foto ${name}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;"></div>`
       : `<div class="employee-avatar" data-avatar="${id}">${employeeInitial(x.nama)}</div>`;
     const actions=admin?`<div class="photo-actions" style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="photo-upload-btn" type="button" onclick="triggerPhotoUpload('${id}')">Ganti Foto</button>
