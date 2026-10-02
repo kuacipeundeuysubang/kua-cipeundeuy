@@ -734,6 +734,33 @@ h1 span{color:#0a5f45}
 /* v26 indikator status publikasi pengumuman */
 .nikah-admin-indicator{display:flex;gap:8px;align-items:flex-start;margin-top:7px;padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.08);font-size:12px;background:#fafafa}
 .nikah-admin-indicator>span{font-size:14px;line-height:1.2}.nikah-admin-indicator b{display:block;font-size:11px;letter-spacing:.02em}.nikah-admin-indicator small{display:block;margin-top:2px;color:#6b7280;line-height:1.35}.nikah-admin-indicator.show{background:#eefaf1;border-color:#b9e3c1}.nikah-admin-indicator.wait{background:#fff9e8;border-color:#ead79a}.nikah-admin-indicator.hidden,.nikah-admin-indicator.done{background:#f5f5f5;border-color:#ddd}
+
+/* Galeri KUA Cipeundeuy — desain publik */
+.gallery-filter{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto 24px}
+.gallery-filter-btn{border:1px solid rgba(21,91,55,.18);background:#fff;color:#31513f;padding:9px 15px;border-radius:999px;font:inherit;font-size:13px;cursor:pointer;transition:.2s ease;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.gallery-filter-btn:hover,.gallery-filter-btn.active{background:#176b43;color:#fff;border-color:#176b43}
+.gallery-feature{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:0;margin:0 auto 28px;max-width:1050px;background:#fff;border:1px solid rgba(20,75,45,.1);border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.07)}
+.gallery-feature-media{min-height:330px;background:linear-gradient(135deg,#edf5ef,#f8f5e8)}
+.gallery-feature-info{padding:30px;display:flex;flex-direction:column;justify-content:center}
+.gallery-badge,.gallery-card-category{display:inline-flex;align-items:center;width:max-content;border-radius:999px;background:#f4e7a6;color:#6c5710;padding:6px 10px;font-size:11px;font-weight:700;letter-spacing:.02em}
+.gallery-feature-info h3{margin:13px 0 10px;font-size:25px;line-height:1.2;color:#173b29}
+.gallery-feature-info p{margin:12px 0 18px;color:#66736b;line-height:1.7;font-size:14px}
+.gallery-meta{display:flex;flex-wrap:wrap;gap:10px;color:#66736b;font-size:12px}
+.gallery-more-btn{align-self:flex-start;border:0;background:#176b43;color:#fff;padding:10px 16px;border-radius:10px;font:inherit;font-size:13px;cursor:pointer}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:1050px;margin:0 auto}
+.gallery-card{background:#fff;border:1px solid rgba(20,75,45,.09);border-radius:16px;overflow:hidden;box-shadow:0 7px 22px rgba(0,0,0,.055);transition:transform .2s ease,box-shadow .2s ease}
+.gallery-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.09)}
+.gallery-card-media{display:block;width:100%;padding:0;border:0;background:#edf4ef;cursor:pointer;aspect-ratio:4/3;overflow:hidden}
+.gallery-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#edf5ef,#f7f2d9);color:#5f7b6b}
+.gallery-placeholder span{font-size:35px;opacity:.8}.gallery-placeholder small{margin-top:8px;font-size:11px}
+.gallery-placeholder-feature span{font-size:56px}.gallery-placeholder-feature small{font-size:13px}
+.gallery-card-body{padding:15px 16px 17px}.gallery-card-body h3{margin:9px 0 6px;font-size:16px;color:#193d2a}.gallery-card-body p{margin:0 0 9px;color:#6d766f;font-size:13px;line-height:1.5}.gallery-card-body time{font-size:11px;color:#929a94}
+.gallery-empty{text-align:center;padding:30px;color:#777}
+.gallery-lightbox{position:fixed;inset:0;z-index:9999;background:rgba(8,22,15,.78);display:none;align-items:center;justify-content:center;padding:22px}.gallery-lightbox.show{display:flex}
+.gallery-lightbox-dialog{position:relative;width:min(900px,100%);max-height:92vh;background:#fff;border-radius:18px;overflow:auto;box-shadow:0 20px 70px rgba(0,0,0,.35)}
+.gallery-lightbox-close{position:absolute;right:12px;top:10px;width:38px;height:38px;border:0;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:25px;line-height:1;cursor:pointer;z-index:2}.gallery-lightbox-image{min-height:380px;display:flex;align-items:center;justify-content:center;background:#eef4ef}.gallery-lightbox-image span{font-size:64px;opacity:.7}.gallery-lightbox-caption{padding:18px 22px 22px}.gallery-lightbox-caption span{font-size:11px;color:#866e1d;font-weight:700}.gallery-lightbox-caption h3{margin:5px 0 6px;color:#183b29}.gallery-lightbox-caption p{margin:0;color:#68736c;line-height:1.6;font-size:13px}
+@media(max-width:800px){.gallery-feature{grid-template-columns:1fr}.gallery-feature-media{min-height:240px}.gallery-feature-info{padding:22px}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.gallery-card-body{padding:12px}.gallery-card-body h3{font-size:14px}.gallery-card-body p{font-size:12px}.gallery-filter{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.gallery-filter-btn{white-space:nowrap}.gallery-lightbox-image{min-height:260px}}
+@media(max-width:460px){.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gallery-feature-info h3{font-size:21px}.gallery-feature-info p{font-size:13px}.gallery-placeholder span{font-size:28px}.gallery-placeholder-feature span{font-size:45px}}
 </style>
 
 <style>
@@ -1051,12 +1078,68 @@ h1 span{color:#07583f!important}
 </section>
 
 <section id="galeri" class="page">
-  <div class="section-title"><div class="kicker">Dokumentasi</div><h2>Galeri</h2><p class="lead">Foto gedung, sejarah, kegiatan, dan dokumentasi KUA.</p></div>
-  <div class="gallery">
-    <div class="photo">Foto Gedung</div><div class="photo">Foto Kegiatan</div><div class="photo">Foto Sejarah</div>
-    <div class="photo">Foto Pimpinan</div><div class="photo">Foto Arsip</div><div class="photo">Foto Wilayah</div>
+  <div class="section-title">
+    <div class="kicker">Dokumentasi</div>
+    <h2>Galeri Kegiatan</h2>
+    <p class="lead">Dokumentasi kegiatan, pelayanan, dan perjalanan KUA Cipeundeuy.</p>
   </div>
+  <div class="gallery-filter" role="tablist" aria-label="Filter galeri">
+    <button type="button" class="gallery-filter-btn active" data-gallery-filter="all" onclick="filterGallery('all')">Semua</button>
+    <button type="button" class="gallery-filter-btn" data-gallery-filter="pelayanan" onclick="filterGallery('pelayanan')">Pelayanan</button>
+    <button type="button" class="gallery-filter-btn" data-gallery-filter="kegiatan" onclick="filterGallery('kegiatan')">Kegiatan</button>
+    <button type="button" class="gallery-filter-btn" data-gallery-filter="pernikahan" onclick="filterGallery('pernikahan')">Pernikahan</button>
+    <button type="button" class="gallery-filter-btn" data-gallery-filter="penyuluhan" onclick="filterGallery('penyuluhan')">Penyuluhan</button>
+    <button type="button" class="gallery-filter-btn" data-gallery-filter="keagamaan" onclick="filterGallery('keagamaan')">Keagamaan</button>
+    <button type="button" class="gallery-filter-btn" data-gallery-filter="kua" onclick="filterGallery('kua')">KUA</button>
+  </div>
+  <div class="gallery-feature" data-gallery-category="kegiatan">
+    <div class="gallery-feature-media">
+      <div class="gallery-placeholder gallery-placeholder-feature"><span>📷</span><small>Foto kegiatan terbaru</small></div>
+    </div>
+    <div class="gallery-feature-info">
+      <span class="gallery-badge">Kegiatan Terbaru</span>
+      <h3>Dokumentasi Kegiatan KUA Cipeundeuy</h3>
+      <div class="gallery-meta"><span>📅 Dokumentasi terbaru</span><span>📍 KUA Cipeundeuy</span></div>
+      <p>Ruang untuk menampilkan kegiatan terbaru KUA Cipeundeuy. Foto dan informasi kegiatan akan dapat dikelola melalui menu admin.</p>
+      <button type="button" class="gallery-more-btn" onclick="openGalleryLightbox(this)">Lihat Foto</button>
+    </div>
+  </div>
+  <div class="gallery-grid" id="galleryGrid">
+    <article class="gallery-card" data-gallery-category="pelayanan" data-gallery-title="Pelayanan KUA Cipeundeuy" data-gallery-desc="Dokumentasi pelayanan kepada masyarakat di KUA Cipeundeuy.">
+      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Pelayanan KUA Cipeundeuy"><div class="gallery-placeholder"><span>📷</span></div></button>
+      <div class="gallery-card-body"><span class="gallery-card-category">Pelayanan</span><h3>Pelayanan KUA Cipeundeuy</h3><p>Dokumentasi pelayanan kepada masyarakat.</p><time>Dokumentasi KUA</time></div>
+    </article>
+    <article class="gallery-card" data-gallery-category="kegiatan" data-gallery-title="Kegiatan KUA Cipeundeuy" data-gallery-desc="Dokumentasi kegiatan dan aktivitas kedinasan KUA Cipeundeuy.">
+      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Kegiatan KUA Cipeundeuy"><div class="gallery-placeholder"><span>📷</span></div></button>
+      <div class="gallery-card-body"><span class="gallery-card-category">Kegiatan</span><h3>Kegiatan KUA Cipeundeuy</h3><p>Aktivitas dan kegiatan kedinasan.</p><time>Dokumentasi KUA</time></div>
+    </article>
+    <article class="gallery-card" data-gallery-category="pernikahan" data-gallery-title="Pelayanan Pernikahan" data-gallery-desc="Dokumentasi pelayanan dan pelaksanaan akad nikah.">
+      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Pelayanan Pernikahan"><div class="gallery-placeholder"><span>📷</span></div></button>
+      <div class="gallery-card-body"><span class="gallery-card-category">Pernikahan</span><h3>Pelayanan Pernikahan</h3><p>Dokumentasi pelayanan dan akad nikah.</p><time>Dokumentasi KUA</time></div>
+    </article>
+    <article class="gallery-card" data-gallery-category="penyuluhan" data-gallery-title="Kegiatan Penyuluhan" data-gallery-desc="Dokumentasi kegiatan penyuluhan agama dan pembinaan masyarakat.">
+      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Kegiatan Penyuluhan"><div class="gallery-placeholder"><span>📷</span></div></button>
+      <div class="gallery-card-body"><span class="gallery-card-category">Penyuluhan</span><h3>Kegiatan Penyuluhan</h3><p>Pembinaan dan penyuluhan masyarakat.</p><time>Dokumentasi KUA</time></div>
+    </article>
+    <article class="gallery-card" data-gallery-category="keagamaan" data-gallery-title="Kegiatan Keagamaan" data-gallery-desc="Dokumentasi kegiatan keagamaan yang melibatkan KUA dan masyarakat.">
+      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto Kegiatan Keagamaan"><div class="gallery-placeholder"><span>📷</span></div></button>
+      <div class="gallery-card-body"><span class="gallery-card-category">Keagamaan</span><h3>Kegiatan Keagamaan</h3><p>Dokumentasi kegiatan keagamaan.</p><time>Dokumentasi KUA</time></div>
+    </article>
+    <article class="gallery-card" data-gallery-category="kua" data-gallery-title="KUA Cipeundeuy" data-gallery-desc="Dokumentasi gedung, lingkungan, dan aktivitas kantor KUA Cipeundeuy.">
+      <button type="button" class="gallery-card-media" onclick="openGalleryLightbox(this)" aria-label="Lihat foto KUA Cipeundeuy"><div class="gallery-placeholder"><span>📷</span></div></button>
+      <div class="gallery-card-body"><span class="gallery-card-category">KUA</span><h3>KUA Cipeundeuy</h3><p>Gedung, lingkungan, dan aktivitas kantor.</p><time>Dokumentasi KUA</time></div>
+    </article>
+  </div>
+  <div class="gallery-empty" id="galleryEmpty" hidden>Belum ada dokumentasi pada kategori ini.</div>
 </section>
+
+<div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true" onclick="closeGalleryLightbox(event)">
+  <div class="gallery-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Pratinjau foto">
+    <button type="button" class="gallery-lightbox-close" onclick="closeGalleryLightbox()" aria-label="Tutup">×</button>
+    <div class="gallery-lightbox-image" id="galleryLightboxImage"><span>📷</span></div>
+    <div class="gallery-lightbox-caption"><span id="galleryLightboxCategory"></span><h3 id="galleryLightboxTitle">Galeri KUA Cipeundeuy</h3><p id="galleryLightboxDesc"></p></div>
+  </div>
+</div>
 
 <section id="pegawai" class="page">
   <div class="section-title">
@@ -2133,5 +2216,36 @@ document.addEventListener('DOMContentLoaded',function(){
   s.addEventListener('mouseleave',kepalaStartAuto);
 });
 
-</script></body>
+</script>
+<script>
+function filterGallery(category){
+  document.querySelectorAll('.gallery-filter-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.galleryFilter===category));
+  const items=[...document.querySelectorAll('#galleryGrid .gallery-card')];
+  let visible=0;
+  items.forEach(item=>{const show=category==='all'||item.dataset.galleryCategory===category;item.style.display=show?'':'none';if(show)visible++;});
+  const feature=document.querySelector('.gallery-feature');
+  if(feature) feature.style.display=(category==='all'||feature.dataset.galleryCategory===category)?'grid':'none';
+  const empty=document.getElementById('galleryEmpty');
+  if(empty) empty.hidden=visible>0 || (category==='all' && !!feature);
+}
+function openGalleryLightbox(source){
+  const card=source?.closest?.('.gallery-card');
+  const feature=source?.closest?.('.gallery-feature');
+  const title=card?.dataset.galleryTitle || feature?.querySelector('h3')?.textContent || 'Galeri KUA Cipeundeuy';
+  const desc=card?.dataset.galleryDesc || feature?.querySelector('p')?.textContent || '';
+  const cat=card?.querySelector('.gallery-card-category')?.textContent || feature?.querySelector('.gallery-badge')?.textContent || 'Dokumentasi';
+  const lb=document.getElementById('galleryLightbox');
+  if(!lb)return;
+  document.getElementById('galleryLightboxTitle').textContent=title;
+  document.getElementById('galleryLightboxDesc').textContent=desc;
+  document.getElementById('galleryLightboxCategory').textContent=cat;
+  lb.classList.add('show');lb.setAttribute('aria-hidden','false');document.body.classList.add('gallery-lightbox-open');
+}
+function closeGalleryLightbox(event){
+  if(event && event.target && event.target.closest('.gallery-lightbox-dialog') && !event.target.closest('.gallery-lightbox-close')) return;
+  const lb=document.getElementById('galleryLightbox');if(!lb)return;lb.classList.remove('show');lb.setAttribute('aria-hidden','true');document.body.classList.remove('gallery-lightbox-open');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox();});
+</script>
+</body>
 </html>
