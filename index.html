@@ -1535,14 +1535,16 @@ function renderNikah(){
   </div>
 </div>
 
-<div class="nikah-card-body">
-  <div style="text-align:center;margin:4px 0 7px;">
-    <strong style="display:block;font-size:16px;color:var(--green-dark);">
+<div class="nikah-card-body" style="padding:16px 12px 18px;background:#fff;">
+  <div style="text-align:center;margin:2px auto 8px;max-width:92%;">
+    <div style="font-size:11px;line-height:1.4;font-weight:800;letter-spacing:2.2px;color:#9a6b12;text-transform:uppercase;">AKAN DILAKSANAKAN AKAD NIKAH</div>
+    <div style="width:72%;max-width:370px;height:1px;background:#e2c778;margin:8px auto 7px;"></div>
+    <strong style="display:block;font-family:Georgia,'Times New Roman',serif;font-size:25px;line-height:1.25;color:var(--green-dark);font-weight:700;">
       ${nikahEsc(x.tanggal||'')}
     </strong>
+    <div style="width:72%;max-width:370px;height:1px;background:#e2c778;margin:8px auto 10px;"></div>
   </div>
-
-  ${x.tempat?`<div class="nikah-place" style="text-align:center;margin-top:0;">${nikahEsc(x.tempat)}</div>`:''}
+  ${x.tempat?`<div class="nikah-place" aria-label="Alamat akad">⌖ &nbsp;${nikahEsc(x.tempat)}</div>`:''}
 </div>
       </div>
     </article>`).join('')}</div>`;
