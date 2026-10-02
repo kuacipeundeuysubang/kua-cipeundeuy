@@ -712,7 +712,10 @@ h1 span{color:#0a5f45}
   .announce-item .meta{flex:1 1 calc(100% - 84px)}
   .announce-item .actions{width:100%;display:grid;grid-template-columns:1fr 1fr;flex-direction:row;margin-top:2px}
   .announce-item button{min-height:38px;font-size:12px}
-.announce-preview .photo-remove-btn{margin-left:0;width:100%;min-height:40px}
+  .announce-preview{display:flex;flex-wrap:wrap;align-items:center;min-width:0;gap:10px}
+  .announce-preview img{flex:0 0 88px}
+  .announce-preview span{flex:1 1 180px;min-width:0;width:auto;overflow-wrap:anywhere;word-break:normal;white-space:normal}
+  .announce-preview .photo-remove-btn{margin-left:0;flex:0 0 100%;width:100%;min-height:40px}
   .admin-badge{align-items:stretch}
   .admin-badge>span:last-child{width:100%;justify-content:stretch!important}
   .admin-badge>span:last-child button{flex:1}
