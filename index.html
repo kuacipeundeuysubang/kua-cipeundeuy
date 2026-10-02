@@ -1055,6 +1055,65 @@ body.admin-mode .gallery-admin-public-action{display:block}
 @media(max-width:600px){.gallery-feature-media .gallery-db-media{min-height:240px}.gallery-admin-row{align-items:flex-start}.gallery-admin-thumb{width:62px;height:48px;flex-basis:62px}}
 </style>
 
+
+<style id="gallery-frame-fix">
+/* ===== GALERI FRAME FIX ===== */
+/* Foto kartu: ukuran frame seragam, tanpa distorsi */
+.gallery-card-media{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:4/3!important;
+  overflow:hidden!important;
+  background:#eef4ef!important;
+  display:block!important;
+}
+.gallery-card-media .gallery-db-media{
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:auto!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  display:block!important;
+}
+/* Foto unggulan: seluruh foto terlihat, tidak dipotong */
+.gallery-feature-media{
+  min-height:0!important;
+  height:100%!important;
+  background:#eef4ef!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+}
+.gallery-feature-media .gallery-card-media{
+  width:100%!important;
+  height:100%!important;
+  min-height:330px!important;
+  aspect-ratio:auto!important;
+  background:#eef4ef!important;
+}
+.gallery-feature-media .gallery-db-media{
+  width:100%!important;
+  height:100%!important;
+  min-height:330px!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  background:#eef4ef!important;
+}
+.gallery-feature-media .gallery-db-video{
+  object-fit:contain!important;
+}
+@media(max-width:800px){
+  .gallery-feature-media{min-height:0!important;height:auto!important}
+  .gallery-feature-media .gallery-card-media{min-height:240px!important;height:240px!important}
+  .gallery-feature-media .gallery-db-media{min-height:240px!important;height:240px!important}
+}
+@media(max-width:460px){
+  .gallery-card-media{aspect-ratio:4/3!important}
+  .gallery-feature-media .gallery-card-media{min-height:230px!important;height:230px!important}
+  .gallery-feature-media .gallery-db-media{min-height:230px!important;height:230px!important}
+}
+</style>
 </head>
 <body>
 
