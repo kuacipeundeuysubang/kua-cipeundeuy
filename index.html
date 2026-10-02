@@ -1014,7 +1014,30 @@ body.admin-mode .gallery-admin-public-action{display:block}
 .gallery-publish-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:16px;padding-top:13px;border-top:1px solid #e5eae7}.gallery-publish-actions .left,.gallery-publish-actions .right{display:flex;gap:8px;flex-wrap:wrap}.gallery-publish-actions button{border:1px solid #d4ddd8;background:#fff;color:#365047;border-radius:9px;padding:9px 13px;font-weight:800;cursor:pointer}.gallery-publish-actions .primary{background:#0b6b4f;color:#fff;border-color:#0b6b4f}.gallery-publish-actions .social-primary{background:#cda91b;color:#fff;border-color:#cda91b}
 .gallery-post-status{display:none;border-radius:10px;padding:9px 11px;margin-top:11px;font-size:11px;font-weight:700}.gallery-post-status.show{display:block}.gallery-post-status.info{background:#eef6f2;color:#28614f}.gallery-post-status.warn{background:#fff7df;color:#80691c}
 .gallery-draft-list{margin-top:18px}.gallery-draft-item{display:flex;align-items:center;gap:10px;border:1px solid #e2e7e4;border-radius:10px;padding:9px;margin-bottom:7px;background:#fff}.gallery-draft-thumb{width:52px;height:42px;border-radius:7px;background:#edf2ef;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto}.gallery-draft-thumb img{width:100%;height:100%;object-fit:cover}.gallery-draft-item .meta{flex:1;min-width:0}.gallery-draft-item .meta strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gallery-draft-item .meta small{color:#78857f;font-size:10px}.gallery-platform-status{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.gallery-platform-status span{font-size:9px;border-radius:999px;padding:3px 6px;background:#f0f3f1;color:#6d7974}.gallery-platform-status .ok{background:#e8f6ef;color:#267050}
-@media(max-width:760px){.gallery-publish-layout{grid-template-columns:1fr}.gallery-form-grid{grid-template-columns:1fr}.gallery-social-row{grid-template-columns:1fr}.gallery-publish-head{display:block}.gallery-publish-head .social-state{justify-content:flex-start;margin-top:9px}.gallery-publish-actions{display:block}.gallery-publish-actions .left,.gallery-publish-actions .right{width:100%;margin-top:7px}.gallery-publish-actions button{width:100%}}
+@media(max-width:950px){
+  .gallery-publish-modal{padding:8px;overflow-x:hidden}
+  .gallery-publish-modal .admin-modal{width:100%;max-width:none;box-sizing:border-box;max-height:calc(100dvh - 16px)}
+  .gallery-publish-layout{grid-template-columns:minmax(0,1fr);gap:14px}
+  .gallery-form-grid{grid-template-columns:minmax(0,1fr)}
+  .gallery-form-grid .full{grid-column:auto}
+  .gallery-social-row{grid-template-columns:minmax(0,1fr)}
+  .gallery-publish-head{display:block}
+  .gallery-publish-head .social-state{justify-content:flex-start;margin-top:10px}
+  .gallery-publish-head .social-state-badge{max-width:100%;box-sizing:border-box}
+  .gallery-publish-actions{display:block}
+  .gallery-publish-actions .left,.gallery-publish-actions .right{width:100%;margin-top:7px}
+  .gallery-publish-actions button{width:100%;min-height:44px}
+  .gallery-publish-modal .admin-modal-body{overflow-x:hidden}
+  .gallery-media-drop{min-height:210px}
+}
+@media(max-width:650px){
+  .gallery-publish-modal{padding:0}
+  .gallery-publish-modal .admin-modal{max-height:100dvh;height:100dvh;border-radius:0;border-left:0;border-right:0}
+  .gallery-publish-modal .admin-modal-head{padding:18px 17px 15px}
+  .gallery-publish-modal .admin-modal-body{padding:17px 16px calc(20px + env(safe-area-inset-bottom));}
+  .gallery-media-drop{min-height:180px;padding:14px}
+  .gallery-media-placeholder .big{font-size:34px}
+}
 </style>
 
 <style>
@@ -2276,9 +2299,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGalleryLightbox
         <div>
           <label class="admin-field" style="display:block;cursor:pointer">
             <span style="display:block;font-weight:800;font-size:12px;margin-bottom:6px;color:#315448">Foto / Video</span>
-            <input id="galleryMediaInput" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="previewGalleryMedia(event)">
+            <input id="galleryMediaInput" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" style="display:none" onchange="previewGalleryMedia(event)">
             <div class="gallery-media-drop" id="galleryMediaDrop" onclick="document.getElementById('galleryMediaInput').click()">
-              <div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4, WebM atau MOV</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>
+              <div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4 atau WebM</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>
             </div>
           </label>
         </div>
@@ -2390,7 +2413,7 @@ function closeGalleryManager(){document.getElementById('galleryManagerModal')?.c
 function previewGalleryMedia(e){const f=e.target.files?.[0],drop=document.getElementById('galleryMediaDrop');if(!f||!drop)return;const url=URL.createObjectURL(f),isVideo=f.type.startsWith('video/');drop.innerHTML=isVideo?`<video src="${url}" controls playsinline></video>`:`<img src="${url}" alt="Pratinjau media galeri">`;}
 function galleryStatus(msg,type='info'){const el=document.getElementById('galleryPostStatus');if(!el)return;el.textContent=msg;el.className='gallery-post-status show '+type;}
 function galleryFormData(){return {title:(document.getElementById('galleryPostTitle')?.value||'').trim(),date:document.getElementById('galleryPostDate')?.value||'',category:document.getElementById('galleryPostCategory')?.value||'kegiatan',caption:(document.getElementById('galleryPostCaption')?.value||'').trim(),hashtags:(document.getElementById('galleryPostHashtag')?.value||'').trim(),website:!!document.getElementById('galleryPublishWebsite')?.checked,instagram:!!document.getElementById('galleryPublishInstagram')?.checked,tiktok:!!document.getElementById('galleryPublishTiktok')?.checked,featured:!!document.getElementById('galleryPublishFeatured')?.checked};}
-function resetGalleryPostForm(){['galleryPostTitle','galleryPostDate','galleryPostCaption'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const h=document.getElementById('galleryPostHashtag');if(h)h.value='#KUACipeundeuy #KemenagSubang #PelayananKUA';['galleryPublishInstagram','galleryPublishTiktok','galleryPublishFeatured'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});const w=document.getElementById('galleryPublishWebsite');if(w)w.checked=true;const input=document.getElementById('galleryMediaInput');if(input)input.value='';const drop=document.getElementById('galleryMediaDrop');if(drop)drop.innerHTML='<div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4, WebM atau MOV</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>';const st=document.getElementById('galleryPostStatus');if(st)st.className='gallery-post-status';}
+function resetGalleryPostForm(){['galleryPostTitle','galleryPostDate','galleryPostCaption'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const h=document.getElementById('galleryPostHashtag');if(h)h.value='#KUACipeundeuy #KemenagSubang #PelayananKUA';['galleryPublishInstagram','galleryPublishTiktok','galleryPublishFeatured'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});const w=document.getElementById('galleryPublishWebsite');if(w)w.checked=true;const input=document.getElementById('galleryMediaInput');if(input)input.value='';const drop=document.getElementById('galleryMediaDrop');if(drop)drop.innerHTML='<div class="gallery-media-placeholder"><span class="big">📷</span><b>Pilih foto atau video</b><span>JPG, PNG, WebP, MP4 atau WebM</span><br><small>Media yang sama dipakai untuk website dan kanal sosial.</small></div>';const st=document.getElementById('galleryPostStatus');if(st)st.className='gallery-post-status';}
 async function uploadGalleryMedia(file,id){const ext=(file.name.split('.').pop()||'bin').toLowerCase();const safeExt=ext==='jpeg'?'jpg':ext;const path=`${new Date().getFullYear()}/${id}-${Date.now()}.${safeExt}`;const {error}=await supabaseClient.storage.from(GALLERY_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=supabaseClient.storage.from(GALLERY_BUCKET).getPublicUrl(path);return {url:data.publicUrl,path};}
 async function saveGalleryToSupabase(asDraft=false){
   const d=galleryFormData(),f=document.getElementById('galleryMediaInput')?.files?.[0];
