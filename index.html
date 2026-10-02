@@ -541,7 +541,7 @@ body.admin-mode .photo-actions{display:block}
 .nikah-date{display:inline-flex;align-items:center;gap:6px;background:#edf7f2;color:#086b4b;border:1px solid #cfe5dc;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:800}
 .nikah-slide h3{font-size:18px;margin:8px 0 3px;color:var(--ink)}
 .nikah-slide p{font-size:12px;color:var(--muted);margin:0}
-.nikah-place{margin-top:6px;font-size:11px;color:var(--green);font-weight:700}
+.nikah-place{margin:4px auto 0;font-size:11px;color:var(--green);font-weight:700;line-height:1.45;max-width:92%;overflow-wrap:anywhere;text-align:center}
 .nikah-empty{padding:28px 20px;text-align:center;color:var(--muted);font-size:13px}
 .nikah-dots{display:flex;justify-content:center;gap:6px;padding:0 0 14px}
 .nikah-dot{width:7px;height:7px;border-radius:50%;background:#cbd8d1;border:0;padding:0;cursor:pointer}
@@ -1404,8 +1404,64 @@ function saveNikahData(){
     localStorage.setItem(NIKAH_KEY,JSON.stringify(nikahData));
     return true;
   }catch(e){
-    alert('Data belum dapat disimpan di browser. Penyimpanan lokal penuh.');
+    alert('Cache browser tidak dapat disimpan. Data utama tetap diproses melalui Supabase.');
     return false;
+  }
+}
+
+const NIKAH_BUCKET='pengumuman-nikah';
+function nikahDataUrlToBlob(dataUrl){
+  const m=String(dataUrl||'').match(/^data:([^;]+);base64,(.+)$/);
+  if(!m) return null;
+  const bin=atob(m[2]); const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  return new Blob([bytes],{type:m[1]||'image/jpeg'});
+}
+function nikahStoragePathFromUrl(url){
+  try{
+    const marker=`/storage/v1/object/public/${NIKAH_BUCKET}/`;
+    const i=String(url||'').indexOf(marker);
+    return i>=0?decodeURIComponent(String(url).slice(i+marker.length)):'';
+  }catch(e){return '';}
+}
+async function uploadNikahDraft(dataUrl,kind,id){
+  if(!dataUrl) return '';
+  if(!dataUrl.startsWith('data:')) return dataUrl;
+  const blob=nikahDataUrlToBlob(dataUrl);
+  if(!blob) throw new Error('Foto '+kind+' tidak dapat diproses.');
+  const path=`${id}/${Date.now()}-${kind.toLowerCase()}.jpg`;
+  const {error}=await supabaseClient.storage.from(NIKAH_BUCKET).upload(path,blob,{upsert:false,contentType:'image/jpeg'});
+  if(error) throw new Error('Upload foto '+kind+' gagal: '+error.message);
+  const {data}=supabaseClient.storage.from(NIKAH_BUCKET).getPublicUrl(path);
+  return data?.publicUrl||'';
+}
+async function saveNikahToSupabase(item,oldItem){
+  const fotoSuami=await uploadNikahDraft(item.fotoSuami,'Suami',item.id);
+  const fotoIstri=await uploadNikahDraft(item.fotoIstri,'Istri',item.id);
+  if(!fotoSuami||!fotoIstri) throw new Error('URL foto belum tersedia.');
+  const row={
+    id:item.id,
+    nama_suami:item.calonSuami,
+    nama_istri:item.calonIstri,
+    tanggal_akad:item.tanggalISO,
+    alamat_akad:item.tempat,
+    mode_publikasi:item.modeTampil,
+    status:item.status,
+    foto_suami_url:fotoSuami,
+    foto_istri_url:fotoIstri,
+    updated_at:new Date().toISOString()
+  };
+  const {error}=await supabaseClient.from('pengumuman_nikah').upsert(row,{onConflict:'id'});
+  if(error) throw new Error('Database pengumuman gagal disimpan: '+error.message);
+  return {...item,fotoSuami,fotoIstri};
+}
+async function deleteNikahFromSupabase(item){
+  const {error}=await supabaseClient.from('pengumuman_nikah').delete().eq('id',item.id);
+  if(error) throw new Error('Penghapusan database gagal: '+error.message);
+  const paths=[nikahStoragePathFromUrl(item.fotoSuami),nikahStoragePathFromUrl(item.fotoIstri)].filter(Boolean);
+  if(paths.length){
+    const {error:storageError}=await supabaseClient.storage.from(NIKAH_BUCKET).remove(paths);
+    if(storageError) console.warn('Foto Storage tidak ikut terhapus:',storageError.message);
   }
 }
 function nikahEsc(v){ return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])); }
@@ -1557,11 +1613,21 @@ function editNikah(id){
   setNikahPreview('Istri',nikahDraftIstri,'Foto calon istri tersimpan. Pilih foto baru bila ingin menggantinya.');
   document.getElementById('nikahAdminError').textContent='';
 }
-function deleteNikah(id){
+async function deleteNikah(id){
   if(!requireAdmin()) return;
   const x=nikahData.find(v=>v.id===id); if(!x)return;
   if(!confirm('Hapus pengumuman '+(x.calonSuami&&x.calonIstri?(x.calonSuami+' & '+x.calonIstri):'ini')+'?')) return;
-  nikahData=nikahData.filter(v=>v.id!==id); saveNikahData(); nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList(); resetNikahForm();
+  const err=document.getElementById('nikahAdminError');
+  try{
+    await deleteNikahFromSupabase(x);
+    nikahData=nikahData.filter(v=>v.id!==id);
+    saveNikahData();
+    nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList(); resetNikahForm();
+    if(err){err.className='admin-success';err.textContent='Pengumuman berhasil dihapus.';}
+  }catch(e){
+    console.error('deleteNikah:',e);
+    if(err){err.className='admin-error';err.textContent=e.message||'Pengumuman gagal dihapus.';}
+  }
 }
 function nikahAdminIndicator(x){
   const v=nikahVisibility(x);
@@ -1632,7 +1698,7 @@ function compressNikahPhoto(file){
     }; reader.readAsDataURL(file);
   });
 }
-function saveNikahForm(){
+async function saveNikahForm(){
   if(!requireAdmin()) return;
   const id=document.getElementById('nikahEditId').value.trim();
   const calonSuami=document.getElementById('nikahSuami').value.trim();
@@ -1647,13 +1713,23 @@ function saveNikahForm(){
   if(!nikahDraftSuami||!nikahDraftIstri){err.textContent='Foto calon suami dan foto calon istri wajib diisi.';return;}
   const kb1=Math.round((nikahDraftSuami.length*3/4)/1024), kb2=Math.round((nikahDraftIstri.length*3/4)/1024);
   if(kb1>500||kb2>500){err.textContent='Masing-masing foto maksimal 500 KB.';return;}
+  const oldItem=id?nikahData.find(v=>v.id===id):null;
   const item={id:id||('nikah-'+Date.now()),calonSuami,calonIstri,tanggalISO,tanggal,tempat,status,modeTampil,fotoSuami:nikahDraftSuami,fotoIstri:nikahDraftIstri};
-  if(id){ const idx=nikahData.findIndex(v=>v.id===id); if(idx>=0) nikahData[idx]=item; else nikahData.push(item); } else nikahData.push(item);
-  if(!saveNikahData())return;
-  nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList();
-  err.className='admin-success'; err.textContent='Pengumuman berhasil disimpan.';
-  resetNikahForm();
+  err.className='admin-error'; err.textContent='Menyimpan ke Supabase…';
+  try{
+    const saved=await saveNikahToSupabase(item,oldItem);
+    if(id){ const idx=nikahData.findIndex(v=>v.id===id); if(idx>=0) nikahData[idx]=saved; else nikahData.push(saved); }
+    else nikahData.push(saved);
+    saveNikahData();
+    nikahIndex=0; renderNikah(); startNikahSlider(); renderNikahAdminList();
+    err.className='admin-success'; err.textContent=id?'Pengumuman berhasil diperbarui.':'Pengumuman berhasil disimpan.';
+    resetNikahForm();
+  }catch(e){
+    console.error('saveNikahForm:',e);
+    err.className='admin-error'; err.textContent=e.message||'Pengumuman gagal disimpan.';
+  }
 }
+
 
 let ADMIN_MEMORY_SESSION=false;
 function adminSessionIsActive(){
