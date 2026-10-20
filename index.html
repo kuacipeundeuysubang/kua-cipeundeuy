@@ -11,6 +11,7 @@
   --green:#0a6b49;
   --green-dark:#064b35;
   --green-soft:#eaf5f0;
+  --mint:#eaf5f0;
   --gold:#b99124;
   --gold-soft:#f7efd5;
   --ink:#19362d;
@@ -770,6 +771,13 @@ h1 span{color:#0a5f45}
 .gallery-lightbox-close{position:absolute;right:12px;top:10px;width:38px;height:38px;border:0;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:25px;line-height:1;cursor:pointer;z-index:2}.gallery-lightbox-image{min-height:380px;display:flex;align-items:center;justify-content:center;background:#eef4ef}.gallery-lightbox-image span{font-size:64px;opacity:.7}.gallery-lightbox-caption{padding:18px 22px 22px}.gallery-lightbox-caption span{font-size:11px;color:#866e1d;font-weight:700}.gallery-lightbox-caption h3{margin:5px 0 6px;color:#183b29}.gallery-lightbox-caption p{margin:0;color:#68736c;line-height:1.6;font-size:13px}
 @media(max-width:800px){.gallery-feature{grid-template-columns:1fr}.gallery-feature-media{min-height:240px}.gallery-feature-info{padding:22px}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.gallery-card-body{padding:12px}.gallery-card-body h3{font-size:14px}.gallery-card-body p{font-size:12px}.gallery-filter{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.gallery-filter-btn{white-space:nowrap}.gallery-lightbox-image{min-height:260px}}
 @media(max-width:460px){.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gallery-feature-info h3{font-size:21px}.gallery-feature-info p{font-size:13px}.gallery-placeholder span{font-size:28px}.gallery-placeholder-feature span{font-size:45px}}
+
+/* Tautan resmi SIKAP/LCKH — menggunakan warna tema website */
+.kua-lckh-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:19px;padding:12px 19px;border-radius:999px;background:#087454;color:#fff;border:1px solid #087454;font-size:13px;font-weight:800;box-shadow:0 5px 15px rgba(8,116,84,.15);transition:transform .18s ease,background .18s ease}
+.kua-lckh-link:hover,.kua-lckh-link:focus-visible{background:#07583f;color:#fff;transform:translateY(-2px)}
+.kua-lckh-link:focus-visible{outline:3px solid #d0a52f;outline-offset:3px}
+.kua-lckh-link svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+@media(max-width:650px){.kua-lckh-link{font-size:12px;padding:12px 16px}}
 </style>
 
 <style>
@@ -1152,6 +1160,11 @@ body.admin-mode .gallery-admin-public-action{display:block}
       <div class="eyebrow">SELAMAT DATANG</div>
       <h1>KUA<br><span>Cipeundeuy</span></h1>
       <p>Melayani dengan hati, menuju keluarga sakinah, mawaddah, warahmah.</p>
+      <a class="kua-lckh-link" href="https://lckh.kuacipeundeuy.my.id/" target="_blank" rel="noopener noreferrer" aria-label="Buka aplikasi SIKAP LCKH Online di tab baru" title="Buka SIKAP — LCKH Online">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M9 10h6M9 14h6M9 18h4"/></svg>
+        <span>SIKAP — LCKH Online</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
+      </a>
     </div>
   </div>
 
