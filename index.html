@@ -1180,6 +1180,29 @@ body.admin-mode .gallery-admin-public-action{display:block}
 }
 @media(max-width:650px){.nikah-photo-pair .nikah-photo-person .sand-person-name{font-size:13px!important}}
 </style>
+<style id="sand-import-styles">
+/* SAND V4.2 - Form impor Excel */
+.sand-import-panel{margin:16px 0;padding:18px;border:1px solid #cfe2d7;background:#f7fbf9;border-radius:16px;color:#174d40}
+.sand-import-panel[hidden]{display:none!important}.sand-import-panel h3{margin:0 0 6px;font-size:1.1rem}.sand-import-panel p{margin:0 0 14px;font-size:.86rem;line-height:1.5}
+.sand-import-file{display:block;font-weight:700;font-size:.84rem}.sand-import-file input{display:block;margin:9px 0 13px;width:100%;max-width:420px}
+.sand-import-scroll{max-width:100%;overflow:auto;max-height:360px;margin:12px 0}.sand-import-scroll table{border-collapse:collapse;width:100%;font-size:.79rem;white-space:nowrap;background:white}
+.sand-import-scroll th,.sand-import-scroll td{padding:9px 11px;text-align:left;border-bottom:1px solid #e4ebe7}.sand-import-scroll th{position:sticky;top:0;background:#ecf4ee;z-index:1}
+.sand-import-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}.sand-import-actions button{padding:10px 14px;border:0;border-radius:10px;background:#116b52;color:white;cursor:pointer;font-weight:700}
+.sand-import-actions button:disabled{opacity:.45;cursor:not-allowed}.sand-import-actions button.sand-muted{background:#e5ede9;color:#154638}
+.sand-import-footnote{font-size:.76rem!important;color:#60766c;margin:14px 0 0!important}
+</style>
+
+<style id="sand-v4-3-single-announcement">
+/* SAND V4.3: tepat satu pasangan per tampilan, termasuk desktop. */
+#nikahSlider.nikah-slider{display:flex!important;justify-content:center!important;align-items:stretch!important;width:100%!important;box-sizing:border-box!important;padding:16px 12px 8px!important;min-height:0!important}
+#nikahSlider .nikah-slide.active,#nikahSlider .nikah-slide.active.single,#nikahSlider .nikah-slide.active.two{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:510px!important;min-width:0!important;margin:0 auto!important;gap:0!important}
+#nikahSlider .nikah-card{width:100%!important;min-width:0!important;max-width:100%!important;height:auto!important;box-sizing:border-box!important;margin:0 auto!important;overflow:hidden!important}
+#nikahSlider .nikah-photo-pair{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;width:100%!important;box-sizing:border-box!important}
+#nikahSlider .nikah-photo-person{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+#nikahSlider .sand-person-name{position:static!important;display:block!important;height:auto!important;min-height:2.7em!important;line-height:1.35!important;overflow-wrap:anywhere!important;text-align:center!important;margin:8px 0 4px!important}
+#nikahSlider .sand-person-role{position:static!important;display:block!important;max-width:100%!important;margin:0 auto 8px!important;text-align:center!important}
+@media(max-width:600px){#nikahSlider.nikah-slider{padding:12px 8px 6px!important}#nikahSlider .nikah-slide.active{max-width:430px!important}#nikahSlider .nikah-photo-pair{gap:8px!important}}
+</style>
 </head>
 <body>
 
@@ -1294,7 +1317,17 @@ body.admin-mode .gallery-admin-public-action{display:block}
   <div class="sand-panel"><div class="sand-panel-head"><div><h3>Grafik Jumlah Pernikahan per Tahun</h3><p>Ringkasan berdasarkan tahun indeks arsip yang tersedia. Angka dapat berubah setelah verifikasi.</p></div><span class="sand-chip">Data sementara</span></div><div id="sandYearChart" class="sand-chart" role="img" aria-label="Grafik arsip pernikahan per tahun"></div><p class="sand-footnote">Tahun yang belum lengkap tidak ditampilkan sebagai nol. Statistik bukan angka resmi final.</p></div>
   <div class="sand-panel sand-private" id="sandAdminPanel" hidden><div class="sand-panel-head"><div><h3><span aria-hidden="true">⌕</span> Pencarian Arsip Nikah</h3><p>Hanya untuk admin SAND yang telah mendapat izin akses.</p></div><span class="sand-chip">Internal</span></div>
   <div class="sand-search-row"><input id="sandKeyword" type="search" placeholder="Nama suami, nama istri, atau nomor akta..." autocomplete="off" aria-label="Kata kunci pencarian arsip"><select id="sandYear" aria-label="Filter tahun"><option value="">Semua tahun</option></select><button type="button" id="sandSearchBtn" onclick="sandSearch()">⌕ Cari</button></div>
-  <div class="sand-tools"><button type="button" onclick="sandOpenForm()">＋ Tambah Arsip</button><label><input type="checkbox" id="sandOnlyIncomplete"> Hanya data belum lengkap</label><button type="button" class="sand-muted" onclick="sandSearch()">↻ Muat data</button></div>
+  <div class="sand-tools"><button type="button" onclick="sandOpenForm()">＋ Tambah Arsip</button><button type="button" onclick="sandToggleImport()">⇧ Impor Excel SIMKAH</button><label><input type="checkbox" id="sandOnlyIncomplete"> Hanya data belum lengkap</label><button type="button" class="sand-muted" onclick="sandSearch()">↻ Muat data</button></div>
+
+  <div id="sandImportPanel" class="sand-import-panel" hidden>
+    <h3>Impor Excel Akta Nikah</h3>
+    <p>Unggah laporan SIMKAH (.xlsx), periksa data yang terbaca, lalu konfirmasi. Nama pasangan tidak akan ditampilkan kepada pengunjung umum.</p>
+    <label class="sand-import-file">Pilih berkas Excel (.xlsx) <input type="file" id="sandImportFile" accept=".xlsx" onchange="sandPreviewExcel()"></label>
+    <div class="sand-state" id="sandImportState" aria-live="polite">Belum ada file dipilih.</div>
+    <div class="sand-import-scroll" id="sandImportPreview"></div>
+    <div class="sand-import-actions"><button type="button" class="sand-muted" onclick="sandResetImport()">Bersihkan</button><button type="button" id="sandImportSubmit" onclick="sandConfirmImport()" disabled>Simpan data baru yang lolos pemeriksaan</button></div>
+    <p class="sand-import-footnote">Baris duplikat, nama kosong, nomor akta kosong, atau tanggal tidak valid tidak diimpor otomatis. Setiap baris yang berhasil tersimpan tercatat di riwayat perubahan.</p>
+  </div>
   <div id="sandSearchState" class="sand-state">Cari nama atau nomor akta; kosongkan kata kunci untuk melihat arsip terakhir.</div><div id="sandResults" class="sand-results"></div>
   </div>
   <div class="sand-panel" id="sandLoginHint"><div class="sand-panel-head"><div><h3><span aria-hidden="true">▣</span> Akses Arsip Digital</h3><p>Pencarian berdasarkan nama atau nomor akta hanya tersedia setelah login admin yang diizinkan. Pengunjung umum hanya dapat melihat data statistik.</p></div></div><button class="sand-outline" type="button" onclick="openAdminLogin()">Masuk sebagai Admin</button></div>
@@ -1616,7 +1649,7 @@ function renderNikah(){
     dots.innerHTML='';
     return;
   }
-  const groupSize=2;
+  const groupSize=1;
   const groups=[];
   for(let i=0;i<visibleNikah.length;i+=groupSize) groups.push(visibleNikah.slice(i,i+groupSize));
   if(nikahIndex>=groups.length) nikahIndex=0;
@@ -1653,14 +1686,14 @@ function renderNikah(){
   dots.innerHTML=groups.map((_,i)=>`<button class="nikah-dot ${i===nikahIndex?'active':''}" onclick="goNikah(${i})" aria-label="Tampilan pengumuman ${i+1}"></button>`).join('');
 }
 function goNikah(i){
-  const groupCount=Math.ceil(getVisibleNikah().length/2);
+  const groupCount=getVisibleNikah().length;
   if(!groupCount)return;
   nikahIndex=(i+groupCount)%groupCount;
   renderNikah();
 }
 function startNikahSlider(){
   clearInterval(nikahTimer);
-  if(Math.ceil(getVisibleNikah().length/2)>1) nikahTimer=setInterval(()=>goNikah(nikahIndex+1),5000);
+  if(getVisibleNikah().length>1) nikahTimer=setInterval(()=>goNikah(nikahIndex+1),5000);
 }
 initNikahData();
 initAdminAuth();
@@ -2774,6 +2807,7 @@ async function publishGalleryPost(){const d=galleryFormData();if(!d.website&&!d.
 
 document.addEventListener('DOMContentLoaded',()=>{loadGalleryPublic();});
 </script>
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script id="sand-scripts">
 const SAND_YEAR_COUNTS=[[2013, 452], [2014, 423], [2015, 427], [2016, 418], [2017, 412], [2018, 486], [2019, 375], [2020, 288], [2021, 351], [2022, 322], [2023, 299]];
 function sandDrawChart(){const root=document.getElementById('sandYearChart');if(!root)return;const max=Math.max(...SAND_YEAR_COUNTS.map(x=>x[1]),1);root.replaceChildren();SAND_YEAR_COUNTS.forEach(([year,count])=>{const col=document.createElement('div');col.className='sand-col';const val=document.createElement('span');val.className='sand-value';val.textContent=count.toLocaleString('id-ID');const bar=document.createElement('div');bar.className='sand-bar';bar.style.height=Math.max(4,Math.round(count/max*190))+'px';bar.title=year+': '+count+' arsip';const label=document.createElement('span');label.className='sand-label';label.textContent=year;col.append(val,bar,label);root.append(col);});}
@@ -2831,6 +2865,84 @@ document.addEventListener('DOMContentLoaded',()=>{sandDrawChart();const select=d
 // SAND rechecks access when navigating and when the browser auth state changes.
 if(typeof supabaseClient!=='undefined'){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(sandRefreshAccess,0)});}
 const sandOriginalShowPage=showPage;showPage=function(id){sandOriginalShowPage(id);if(id==='galeri')sandRefreshAccess();};
+
+
+// SAND V4.2 - Impor Excel SIMKAH dengan pratinjau dan deteksi duplikasi.
+let sandImportRows=[];
+let sandImportInProgress=false;
+function sandToggleImport(){const p=sandField('sandImportPanel');p.hidden=!p.hidden;if(!p.hidden)sandField('sandImportFile').focus();}
+function sandResetImport(){if(sandImportInProgress)return;sandImportRows=[];sandField('sandImportFile').value='';sandField('sandImportPreview').replaceChildren();sandField('sandImportState').textContent='Belum ada file dipilih.';sandField('sandImportSubmit').disabled=true;}
+const sandNormalize=s=>String(s??'').trim().toLocaleUpperCase('id-ID').replace(/\s+/g,' ');
+const sandAktaKey=s=>sandNormalize(s).replace(/[\s.\-/]/g,'');
+function sandParseDate(v){
+ if(v instanceof Date&&!Number.isNaN(v.getTime()))return v.toISOString().slice(0,10);
+ if(typeof v==='number'&&v>20000&&v<100000){const d=XLSX.SSF.parse_date_code(v);if(d&&d.y&&d.m&&d.d)return [d.y,String(d.m).padStart(2,'0'),String(d.d).padStart(2,'0')].join('-');}
+ const t=String(v??'').trim();const m=t.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);if(m){const y=+m[3],mo=+m[2],d=+m[1];const dt=new Date(Date.UTC(y,mo-1,d));return dt.getUTCFullYear()===y&&dt.getUTCMonth()===mo-1&&dt.getUTCDate()===d?`${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`:null;}
+ const iso=t.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const y=+iso[1],mo=+iso[2],d=+iso[3],dt=new Date(Date.UTC(y,mo-1,d));return dt.getUTCFullYear()===y&&dt.getUTCMonth()===mo-1&&dt.getUTCDate()===d?t:null;}
+ return null;
+}
+function sandPairKey(r){return [sandNormalize(r.nama_suami),sandNormalize(r.nama_istri),r.tanggal_akad||''].join('|');}
+async function sandLoadExistingForImport(){
+ const result=[];const size=750;
+ for(let offset=0;offset<200000;offset+=size){const {data,error}=await supabaseClient.from('sand_arsip_nikah').select('nomor_akta,nama_suami,nama_istri,tanggal_akad').range(offset,offset+size-1);
+ if(error)throw error;result.push(...(data||[]));if(!data||data.length<size)break;}
+ return result;
+}
+async function sandPreviewExcel(){
+ const state=sandField('sandImportState'),preview=sandField('sandImportPreview'),submit=sandField('sandImportSubmit');submit.disabled=true;preview.replaceChildren();sandImportRows=[];
+ if(!await sandHasAccess()){state.textContent='Akses admin SAND diperlukan.';return;}
+ const file=sandField('sandImportFile').files?.[0];if(!file)return;if(!/\.xlsx$/i.test(file.name)){state.textContent='Gunakan berkas .xlsx.';return;}
+ if(file.size>8*1024*1024){state.textContent='Berkas maksimal 8 MB.';return;}
+ if(typeof XLSX==='undefined'){state.textContent='Pustaka pembaca Excel gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.';return;}
+ state.textContent='Membaca Excel dan memeriksa kemungkinan duplikat…';
+ try{
+ const workbook=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:false});const worksheet=workbook.Sheets[workbook.SheetNames[0]];
+ if(!worksheet)throw Error('Sheet tidak ditemukan.');
+ const grid=XLSX.utils.sheet_to_json(worksheet,{header:1,defval:'',raw:false});
+ const keys=['no. akta baru','nama suami','nama istri','lokasi akad','tanggal akad'];
+ const headerIndex=grid.findIndex(row=>{const cells=row.map(v=>String(v).trim().toLowerCase());return keys.every(k=>cells.includes(k));});
+ if(headerIndex<0)throw Error('Kolom wajib tidak ditemukan. Diperlukan: No. Akta Baru, Nama Suami, Nama Istri, Lokasi Akad, Tanggal Akad.');
+ const headers=grid[headerIndex].map(v=>String(v).trim().toLowerCase());const idx=Object.fromEntries(keys.map(k=>[k,headers.indexOf(k)]));
+ const source='Laporan SIMKAH: '+file.name.slice(0,160);const existing=await sandLoadExistingForImport();const acts=new Set(existing.map(v=>sandAktaKey(v.nomor_akta)).filter(Boolean));const pairs=new Set(existing.map(sandPairKey));
+ const localActs=new Set(),localPairs=new Set();
+ for(let i=headerIndex+1;i<grid.length;i++){
+ const row=grid[i];if(!row?.some(v=>String(v??'').trim()))continue;
+ const akta=String(row[idx['no. akta baru']]??'').trim();const suami=String(row[idx['nama suami']]??'').trim();const istri=String(row[idx['nama istri']]??'').trim();
+ const rawDate=row[idx['tanggal akad']];const date=sandParseDate(rawDate);const r={nomor_akta:akta,nama_suami:suami,nama_istri:istri,alamat_akad:String(row[idx['lokasi akad']]??'').trim()||null,tanggal_akad:date,tahun_indeks:date?Number(date.slice(0,4)):null,sumber_data:source,status_verifikasi:'Belum diverifikasi',catatan_pemeriksaan:null};
+ const key=sandAktaKey(akta),pair=sandPairKey(r);let reason='Siap impor';
+ if(!suami||!istri||!akta||!date)reason='Data wajib kosong atau tanggal tidak valid';
+ else if(acts.has(key)||localActs.has(key))reason='Nomor akta sudah ada';
+ else if(pairs.has(pair)||localPairs.has(pair))reason='Pasangan dan tanggal akad sudah ada';
+ sandImportRows.push({line:i+1,row:r,reason});if(reason==='Siap impor'){localActs.add(key);localPairs.add(pair);}
+ }
+ if(!sandImportRows.length)throw Error('Tidak ada baris data yang dapat dibaca.');
+ sandRenderImportPreview();const ready=sandImportRows.filter(x=>x.reason==='Siap impor').length;
+ state.textContent=`${sandImportRows.length} baris diperiksa • ${ready} siap impor • ${sandImportRows.length-ready} dilewati/perlu pemeriksaan.`;submit.disabled=ready===0;
+ }catch(e){state.textContent='Gagal membaca: '+(e.message||e);sandImportRows=[];}
+}
+function sandRenderImportPreview(){
+ const target=sandField('sandImportPreview');target.replaceChildren();const table=document.createElement('table');const thead=document.createElement('thead');const tr=document.createElement('tr');['Baris','Nomor akta','Suami','Istri','Tanggal','Status'].forEach(v=>{const th=document.createElement('th');th.textContent=v;tr.append(th)});thead.append(tr);table.append(thead);
+ const body=document.createElement('tbody');sandImportRows.slice(0,150).forEach(x=>{const tr=document.createElement('tr');[x.line,x.row.nomor_akta,x.row.nama_suami,x.row.nama_istri,x.row.tanggal_akad||'—',x.reason].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});body.append(tr)});table.append(body);target.append(table);
+ if(sandImportRows.length>150){const info=document.createElement('p');info.textContent='Pratinjau menampilkan 150 baris pertama; seluruh baris tetap diperiksa.';target.append(info);}
+}
+async function sandConfirmImport(){
+ if(sandImportInProgress||!await sandHasAccess())return;const ready=sandImportRows.filter(x=>x.reason==='Siap impor');if(!ready.length)return;
+ if(!confirm(`Simpan ${ready.length} arsip baru ke Supabase? Baris duplikat atau tidak lengkap akan dilewati.`))return;
+ sandImportInProgress=true;const btn=sandField('sandImportSubmit'),state=sandField('sandImportState');btn.disabled=true;let saved=0,failed=0;let firstError='';
+ try{
+ // Periksa ulang sebelum menulis untuk mengurangi risiko data ganda saat dua admin bekerja.
+ const latest=await sandLoadExistingForImport(),acts=new Set(latest.map(v=>sandAktaKey(v.nomor_akta)).filter(Boolean)),pairs=new Set(latest.map(sandPairKey));let skipped=0;
+ for(const item of ready){const r=item.row,key=sandAktaKey(r.nomor_akta),pair=sandPairKey(r);if(acts.has(key)||pairs.has(pair)){skipped++;continue;}
+ const payload={...r,id_arsip:'SAND-'+crypto.randomUUID()};const {error}=await supabaseClient.from('sand_arsip_nikah').insert(payload);
+ if(error){failed++;if(!firstError)firstError=error.message;}else{saved++;acts.add(key);pairs.add(pair);item.reason='Berhasil disimpan';}
+ if((saved+failed+skipped)%10===0)state.textContent=`Menyimpan… berhasil ${saved}, gagal ${failed}, dilewati ${skipped}`;
+ }
+ state.textContent=`Selesai: ${saved} berhasil, ${skipped} duplikat dilewati, ${failed} gagal.${firstError?' Kesalahan pertama: '+firstError:''} Silakan periksa data di pencarian.`;
+ sandRenderImportPreview();if(saved)await sandSearch();
+ }catch(e){state.textContent='Impor terhenti: '+(e.message||e)+`. ${saved} baris sudah berhasil disimpan.`;}
+ finally{sandImportInProgress=false;btn.disabled=true;}
+}
+
 </script>
 </body>
 </html>
