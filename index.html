@@ -951,51 +951,98 @@ h1 span{color:#07583f!important}
 </style>
 <style id="kepala-history-fix">
 
-/* === KEPALA KUA SLIDESHOW - isolated styles === */
-.kepala-slider-wrap{position:relative;min-height:320px;padding:20px 64px 42px;overflow:hidden;background:linear-gradient(135deg,#f8fcfa,#fff)}
-.kepala-slider{position:relative;min-height:250px}
-.kepala-slide{display:none;height:250px;animation:kepalaFadeSlide .45s ease}
-.kepala-slide.active{display:flex;align-items:center;justify-content:center}
-@keyframes kepalaFadeSlide{from{opacity:.15;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
-.kepala-slide-card{width:min(680px,100%);min-height:215px;background:#fff;border:1px solid #e2ebe6;border-radius:20px;box-shadow:0 9px 26px rgba(25,54,45,.08);display:grid;grid-template-columns:145px 1fr;gap:22px;align-items:center;padding:17px 22px;box-sizing:border-box;position:relative}
-.kepala-slide-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#b99124}
-.kepala-slide-photo,.kepala-slide-placeholder{width:120px;height:166px;border-radius:12px;object-fit:cover;display:grid;place-items:center;margin:auto;background:#eaf5f0;border:1px solid #d6e5df;box-sizing:border-box}
-.kepala-slide-placeholder{font-size:30px;font-weight:900;color:#087454}
-.kepala-slide-number{display:inline-block;padding:5px 9px;border-radius:999px;background:#fff7dc;color:#80651a;border:1px solid #ead58b;font-size:9px;font-weight:900;letter-spacing:.4px;margin-bottom:7px}
-.kepala-slide-content h4{color:#164638;font-size:20px;line-height:1.25;margin:0 0 8px}
-.kepala-slide-content .masa{display:inline-block;background:#edf7f2;color:#087454;border:1px solid #cfe5dc;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:800}
-.kepala-slide-content p{color:#61766f;font-size:11px;line-height:1.6;margin:10px 0 0}
-.kepala-current-large{display:inline-block;margin-left:7px;padding:4px 7px;border-radius:999px;background:#087454;color:#fff;font-size:8px;font-weight:900}
-.kepala-slide-arrow{position:absolute;z-index:5;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid #d8e4de;background:#fff;color:#087454;box-shadow:0 5px 16px rgba(25,54,45,.10);cursor:pointer;font-size:27px;line-height:1}
-.kepala-slide-arrow:hover{border-color:#b99124;color:#8a6a16}
-.kepala-slide-arrow.prev{left:15px}.kepala-slide-arrow.next{right:15px}
-.kepala-slider-dots{position:absolute;left:0;right:0;bottom:17px;display:flex;justify-content:center;gap:5px}
-.kepala-slider-dot{width:7px;height:7px;border:0;padding:0;border-radius:50%;background:#cbd8d1;cursor:pointer}
-.kepala-slider-dot.active{width:22px;border-radius:8px;background:#b99124}
-.kepala-slider-progress{position:absolute;left:64px;right:64px;bottom:0;height:3px;background:#edf1ef}
-.kepala-slider-progress span{display:block;height:100%;width:0;background:#087454;transition:width 5s linear}
-@media(max-width:650px){
- .kepala-slider-wrap{padding:14px 43px 42px;min-height:390px}
- .kepala-slider{min-height:320px}.kepala-slide{height:320px}
- .kepala-slide-card{min-height:300px;grid-template-columns:1fr;gap:8px;text-align:center;padding:14px 17px}
- .kepala-slide-photo,.kepala-slide-placeholder{width:90px;height:122px}
- .kepala-slide-content h4{font-size:17px}.kepala-slide-content p{font-size:10px}
- .kepala-slide-arrow{width:34px;height:34px;font-size:23px}
- .kepala-slide-arrow.prev{left:7px}.kepala-slide-arrow.next{right:7px}
- .kepala-slider-progress{left:43px;right:43px}
-}
+/* === HALAMAN SEJARAH === */
+#sejarah{--sj-serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;--sj-gold:#b99124;--sj-gold-text:#8a6a16;--sj-ink:#123d31;--sj-body:#4d635b}
+.sj-panel{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 7px 24px rgba(23,52,43,.05);overflow:hidden;margin-bottom:22px}
+.sj-panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 26px;border-bottom:1px solid #e7edea}
+.sj-panel-head h3{font-size:20px;line-height:1.25;color:var(--ink)}
+.sj-panel-head p{font-size:13px;color:var(--muted);margin-top:3px}
+.kepala-admin-btn{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;border:1px solid #0a6b49;background:#fff;color:#07583f;border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
+.kepala-admin-btn:hover{background:#0a6b49;color:#fff}
+.kepala-admin-btn svg,.kepala-slide-arrow svg,.masa svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.kepala-admin-btn svg{width:15px;height:15px;stroke-width:1.9}
+.kepala-admin-btn:focus-visible,.kepala-slide-arrow:focus-visible,.kepala-slider-dot:focus-visible{outline:3px solid rgba(185,145,36,.55);outline-offset:2px}
 
-.kepala-history-box{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 7px 24px rgba(23,52,43,.05);overflow:hidden;margin-bottom:24px}
-.kepala-history-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 20px;border-bottom:1px solid #e7edea}
-.kepala-history-head h3{font-size:19px;margin:3px 0}.kepala-history-head p{font-size:11px;color:var(--muted)}
-.kepala-admin-btn{flex:0 0 auto;border:1px solid #087454;background:#fff;color:#07583f;border-radius:999px;padding:9px 14px;font-size:11px;font-weight:800;cursor:pointer}
+/* slider kepala KUA */
+.kepala-slider-wrap{position:relative;padding:30px 28px 0;background:linear-gradient(180deg,#f2f8f5,#fbfdfc)}
+.kepala-slider-wrap.is-single{padding-bottom:30px}
+.kepala-slider{display:grid;touch-action:pan-y}
+.kepala-slide{grid-area:1/1;display:flex;justify-content:center;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s linear .4s}
+.kepala-slide.active{opacity:1;visibility:visible;transition:opacity .4s ease}
+.kepala-empty{grid-area:1/1;text-align:center;padding:44px 12px;color:var(--muted);font-size:14px}
+.kepala-empty.is-error{color:#b42318}
+.kepala-slide-card{width:100%;max-width:780px;display:grid;grid-template-columns:190px minmax(0,1fr);grid-template-areas:"photo head" "photo note";grid-template-rows:auto 1fr;column-gap:36px;align-items:start;padding:30px 34px;background:#fff;border:1px solid #e2ebe6;border-radius:20px;box-shadow:0 12px 32px rgba(25,54,45,.08)}
+.kepala-photo{grid-area:photo;position:relative;width:100%;aspect-ratio:3/4}
+.kepala-photo:before{content:"";position:absolute;inset:0;transform:translate(9px,9px);border:2px solid #cfae4a;border-radius:14px}
+.kepala-slide-photo,.kepala-slide-placeholder{position:relative;display:block;width:100%;height:100%;border-radius:14px;object-fit:cover;object-position:center top;background:#e6f1ec}
+.kepala-slide-placeholder{display:grid;place-items:center;font:700 64px/1 var(--sj-serif);color:#0a6b49;background:linear-gradient(160deg,#e6f1ec,#d0e4db)}
+.kepala-head{grid-area:head;min-width:0}
+.kepala-order{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;font-weight:600;color:var(--sj-gold-text);margin:0}
+.kepala-order:before{content:"";width:22px;height:2px;border-radius:2px;background:var(--sj-gold)}
+.kepala-current-large{padding:3px 9px;border-radius:999px;background:#0a6b49;color:#fff;font-size:11px;font-weight:700}
+.kepala-head h4{font:700 30px/1.2 var(--sj-serif);color:var(--sj-ink);margin:9px 0 13px;overflow-wrap:anywhere}
+.masa{display:inline-flex;align-items:center;gap:8px;margin:0;padding:7px 14px;border-radius:999px;background:#edf7f2;color:#07583f;border:1px solid #cfe5dc;font-size:13px;font-weight:700}
+.masa svg{width:15px;height:15px;flex:0 0 auto;stroke-width:1.9}
+.kepala-note{grid-area:note;margin:18px 0 0;padding-top:18px;border-top:1px solid #e9efec;font-size:14.5px;line-height:1.75;color:var(--sj-body);max-width:58ch}
+.kepala-controls{display:flex;align-items:center;justify-content:center;gap:12px;padding:20px 0 24px}
+.kepala-slide-arrow{flex:0 0 auto;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;border:1px solid #cfdcd5;background:#fff;color:#0a6b49;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.kepala-slide-arrow svg{width:18px;height:18px;stroke-width:2.2}
+.kepala-slide-arrow:hover{background:#0a6b49;border-color:#0a6b49;color:#fff}
+.kepala-slider-dots{display:flex;flex-wrap:wrap;justify-content:center;max-width:62%}
+.kepala-slider-dot{position:relative;width:26px;height:26px;border:0;padding:0;background:none;cursor:pointer}
+.kepala-slider-dot:before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:8px;background:#c3d3cb;transform:translate(-50%,-50%);transition:width .25s,background .25s}
+.kepala-slider-dot.active:before{width:24px;background:var(--sj-gold)}
+.kepala-slider-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:#e4ece8}
+.kepala-slider-progress span{display:block;height:100%;width:0;background:var(--sj-gold)}
+.kepala-slider-wrap.is-single .kepala-controls,.kepala-slider-wrap.is-single .kepala-slider-progress{display:none}
+
+/* timeline catatan sejarah */
+.sj-timeline{list-style:none;margin:0;padding:30px 28px 6px}
+.sj-event{position:relative;display:grid;grid-template-columns:104px minmax(0,1fr);column-gap:46px;padding-bottom:34px}
+.sj-event:before{content:"";position:absolute;left:126px;top:18px;bottom:-18px;width:2px;background:linear-gradient(#d9c378,#e3ebe7)}
+.sj-event:after{content:"";position:absolute;left:120px;top:11px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--sj-gold)}
+.sj-event:last-child{padding-bottom:26px}
+.sj-event:last-child:before{display:none}
+.sj-year{text-align:right;font:700 34px/37px var(--sj-serif);color:#0a6b49;font-variant-numeric:lining-nums tabular-nums}
+.sj-event-body h3{font-size:19px;line-height:1.3;color:var(--sj-ink);padding-top:5px}
+.sj-event-body p{margin-top:8px;font-size:14.5px;line-height:1.75;color:var(--sj-body);max-width:62ch}
+
+@media(max-width:720px){
+ .sj-panel{border-radius:18px;margin-bottom:16px}
+ .sj-panel-head{padding:16px;align-items:flex-start;gap:10px}
+ .sj-panel-head h3{font-size:18px}
+ .sj-panel-head p{font-size:12.5px}
+ .kepala-admin-btn{padding:8px 12px;font-size:12px}
+ .kepala-slider-wrap{padding:18px 14px 0}
+ .kepala-slider-wrap.is-single{padding-bottom:18px}
+ .kepala-slide-card{grid-template-columns:104px minmax(0,1fr);grid-template-areas:"photo head" "note note";grid-template-rows:auto auto;column-gap:18px;padding:18px 16px 20px;border-radius:16px}
+ .kepala-photo:before{transform:translate(6px,6px);border-radius:12px}
+ .kepala-slide-photo,.kepala-slide-placeholder{border-radius:12px}
+ .kepala-slide-placeholder{font-size:40px}
+ .kepala-head h4{font-size:22px;margin:7px 0 10px}
+ .masa{font-size:12px;padding:6px 11px}
+ .kepala-note{font-size:14px;margin-top:18px;padding-top:16px;max-width:none}
+ .kepala-controls{padding:16px 0 20px;gap:8px}
+ .kepala-slide-arrow{width:44px;height:44px}
+ .kepala-slider-dots{max-width:56%}
+ .sj-timeline{padding:24px 16px 4px}
+ .sj-event{display:block;padding:0 0 28px 30px}
+ .sj-event:before{left:6px;top:14px;bottom:-14px}
+ .sj-event:after{left:0;top:7px}
+ .sj-year{display:block;text-align:left;font-size:26px;line-height:29px}
+ .sj-event-body h3{padding-top:6px;font-size:17.5px}
+ .sj-event-body p{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ .kepala-slide,.kepala-slide.active{transition:none}
+ .kepala-slider-progress{display:none}
+}
 .table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.kepala-table{width:100%;border-collapse:collapse;min-width:690px}
 .kepala-table th{background:#f4f8f6;color:#50655d;font-size:10px;text-transform:uppercase;letter-spacing:.45px;text-align:left;padding:11px 12px;border-bottom:1px solid #dfe8e4}
 .kepala-table td{padding:11px 12px;border-bottom:1px solid #edf1ef;font-size:12px;vertical-align:middle}.kepala-table tr:last-child td{border-bottom:0}
 .kepala-table .foto-cell{width:66px}.kepala-foto{width:48px;height:62px;border-radius:7px;object-fit:cover;display:block;border:1px solid #dbe6e1;background:#eaf5f0}
 .kepala-placeholder{width:48px;height:62px;border-radius:7px;display:grid;place-items:center;border:1px solid #dbe6e1;background:#eaf5f0;color:#087454;font-weight:800;font-size:13px}
 .kepala-name{font-weight:800;color:#19362d}.kepala-current{display:inline-block;margin-left:7px;padding:3px 7px;border-radius:999px;background:#fff7dc;color:#80651a;border:1px solid #ead58b;font-size:8px;font-weight:800}
-.sejarah-peristiwa-title{margin-top:4px;margin-bottom:12px}.sejarah-peristiwa-title h3{font-size:19px;margin-top:3px}
 .kepala-admin-list{display:grid;gap:9px;max-height:390px;overflow:auto}.kepala-admin-row{border:1px solid #e1e8e4;border-radius:13px;padding:10px;display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:10px;align-items:center}
 .kepala-admin-thumb{width:50px;height:64px;object-fit:cover;border-radius:7px;background:#eaf5f0;border:1px solid #dbe6e1}
 .kepala-admin-row strong{font-size:12px;display:block}.kepala-admin-row small{font-size:10px;color:var(--muted);display:block;margin-top:2px}
@@ -1003,7 +1050,7 @@ h1 span{color:#07583f!important}
 .kepala-admin-actions .primary{background:#0a674d;color:#fff;border-color:#0a674d}.kepala-admin-actions .danger{color:#a33b32;border-color:#e4c8c4}
 .kepala-photo-input{display:none}.kepala-edit-grid textarea,.kepala-edit-grid input{width:100%;box-sizing:border-box;border:1px solid #d9e0dd;border-radius:11px;padding:11px 12px;outline:none;font-size:13px;font-family:inherit}
 .kepala-edit-grid textarea{min-height:76px;resize:vertical}.kepala-edit-grid input:focus,.kepala-edit-grid textarea:focus{border-color:#b99124;box-shadow:0 0 0 3px rgba(185,145,36,.11)}
-@media(max-width:640px){.kepala-history-head{align-items:flex-start;padding:15px;gap:10px}.kepala-history-head h3{font-size:16px}.kepala-admin-btn{padding:8px 10px;font-size:10px}.kepala-admin-row{grid-template-columns:50px minmax(0,1fr)}.kepala-admin-actions{grid-column:1/-1;justify-content:flex-start}}
+@media(max-width:640px){.kepala-admin-row{grid-template-columns:50px minmax(0,1fr)}.kepala-admin-actions{grid-column:1/-1;justify-content:flex-start}}
 </style>
 <style>
 /* ===== ADMIN GALERI + SOSMED PUBLISHING ===== */
@@ -1354,26 +1401,34 @@ body.admin-mode .gallery-admin-public-action{display:block}
   <div class="section-title">
     <div class="kicker">Profil</div>
     <h2>Sejarah KUA Cipeundeuy</h2>
-    <p class="lead">Sejarah kepemimpinan Kepala KUA dari masa ke masa.</p>
+    <p class="lead">Perjalanan KUA Kecamatan Cipeundeuy: para pimpinan dari masa ke masa dan tonggak pentingnya.</p>
   </div>
-  <div class="kepala-history-box">
-    <div class="kepala-history-head">
-      <div><div class="kicker">Kepemimpinan</div><h3>Sejarah Kepala KUA Cipeundeuy</h3><p>Daftar pimpinan KUA berdasarkan periode yang terdokumentasi.</p></div>
-      <button class="kepala-admin-btn" type="button" onclick="openKepalaAdmin()">⚙ Kelola</button>
+
+  <div class="sj-panel">
+    <div class="sj-panel-head">
+      <div><h3>Kepala KUA dari masa ke masa</h3><p>Pimpinan berdasarkan periode yang terdokumentasi.</p></div>
+      <button class="kepala-admin-btn" type="button" onclick="openKepalaAdmin()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>Kelola</button>
     </div>
-    <div class="kepala-slider-wrap" id="kepalaSliderWrap">
-      <button class="kepala-slide-arrow prev" type="button" aria-label="Sebelumnya" onclick="kepalaSlidePrev()">‹</button>
-      <div class="kepala-slider" id="kepalaHistoryBody"></div>
-      <button class="kepala-slide-arrow next" type="button" aria-label="Berikutnya" onclick="kepalaSlideNext()">›</button>
-      <div class="kepala-slider-dots" id="kepalaSliderDots"></div>
-      <div class="kepala-slider-progress"><span id="kepalaSliderProgress"></span></div>
+    <div class="kepala-slider-wrap is-single" id="kepalaSliderWrap" role="region" aria-roledescription="carousel" aria-label="Riwayat Kepala KUA">
+      <div class="kepala-slider" id="kepalaHistoryBody"><div class="kepala-empty">Memuat data Kepala KUA…</div></div>
+      <div class="kepala-controls">
+        <button class="kepala-slide-arrow prev" type="button" aria-label="Kepala KUA sebelumnya" onclick="kepalaSlidePrev()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <div class="kepala-slider-dots" id="kepalaSliderDots"></div>
+        <button class="kepala-slide-arrow next" type="button" aria-label="Kepala KUA berikutnya" onclick="kepalaSlideNext()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+      <div class="kepala-slider-progress" aria-hidden="true"><span id="kepalaSliderProgress"></span></div>
     </div>
   </div>
-  <div class="section-title sejarah-peristiwa-title"><div class="kicker">Peristiwa</div><h3>Catatan Sejarah</h3></div>
-  <div class="timeline">
-    <article class="event"><div class="year">1986</div><h3>KUA Perwakilan</h3><p>KUA Kecamatan Cipeundeuy tercatat sebagai KUA perwakilan yang masih melekat pada KUA Kalijati.</p></article>
-    <article class="event"><div class="year">1994</div><h3>Menjadi KUA Definitif</h3><p>KUA Cipeundeuy menjadi definitif dengan kepala KUA pertama Drs. H. Sahyat Sobarna.</p></article>
-    <article class="event"><div class="year">2001</div><h3>Tanah Wakaf</h3><p>Dokumentasi sejarah mencatat tanah wakaf di Jalan Raya Cipeundeuy No. 260 yang kemudian menjadi lokasi pembangunan gedung KUA.</p></article>
+
+  <div class="sj-panel">
+    <div class="sj-panel-head">
+      <div><h3>Catatan sejarah</h3><p>Tonggak penting perjalanan KUA Kecamatan Cipeundeuy.</p></div>
+    </div>
+    <ol class="sj-timeline">
+      <li class="sj-event"><time class="sj-year" datetime="1986">1986</time><div class="sj-event-body"><h3>KUA Perwakilan</h3><p>KUA Kecamatan Cipeundeuy tercatat sebagai KUA perwakilan yang masih melekat pada KUA Kalijati.</p></div></li>
+      <li class="sj-event"><time class="sj-year" datetime="1994">1994</time><div class="sj-event-body"><h3>Menjadi KUA Definitif</h3><p>KUA Cipeundeuy menjadi definitif dengan kepala KUA pertama Drs. H. Sahyat Sobarna.</p></div></li>
+      <li class="sj-event"><time class="sj-year" datetime="2001">2001</time><div class="sj-event-body"><h3>Tanah Wakaf</h3><p>Dokumentasi sejarah mencatat tanah wakaf di Jalan Raya Cipeundeuy No. 260 yang kemudian menjadi lokasi pembangunan gedung KUA.</p></div></li>
+    </ol>
   </div>
 </section>
 
@@ -2448,53 +2503,67 @@ async function loadKepalaData(){
     console.error('Load Kepala KUA:',e);
     kepalaHistoryData=[];
     const body=document.getElementById('kepalaHistoryBody');
-    if(body)body.innerHTML='<div style="text-align:center;color:#b42318;padding:35px">Data Kepala KUA belum dapat dimuat. Silakan muat ulang halaman.</div>';
+    if(body)body.innerHTML='<div class="kepala-empty is-error">Data Kepala KUA belum dapat dimuat. Silakan muat ulang halaman.</div>';
     const box=document.getElementById('kepalaAdminList');
     if(box)box.innerHTML='<div style="text-align:center;color:#b42318;font-size:12px;padding:20px">Data Kepala KUA belum dapat dimuat.</div>';
   }
 }
 
+const KEPALA_AUTO_MS=7000;
+const KEPALA_ICON_CAL='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>';
 function renderKepalaHistory(){
   const body=document.getElementById('kepalaHistoryBody');
   const dots=document.getElementById('kepalaSliderDots');
+  const wrap=document.getElementById('kepalaSliderWrap');
   if(!body)return;
-  if(!Array.isArray(kepalaHistoryData)||kepalaHistoryData.length===0){
-    body.innerHTML='<div style="text-align:center;color:#687a72;padding:35px">Belum ada data Kepala KUA.</div>';
+  const n=Array.isArray(kepalaHistoryData)?kepalaHistoryData.length:0;
+  if(wrap)wrap.classList.toggle('is-single',n<2);
+  if(n===0){
+    body.innerHTML='<div class="kepala-empty">Belum ada data Kepala KUA.</div>';
     if(dots)dots.innerHTML='';
     kepalaStopAuto();
     return;
   }
-  if(kepalaSlideIndex<0||kepalaSlideIndex>=kepalaHistoryData.length)kepalaSlideIndex=0;
+  if(kepalaSlideIndex<0||kepalaSlideIndex>=n)kepalaSlideIndex=0;
   body.innerHTML=kepalaHistoryData.map((x,i)=>{
+    const active=(i===kepalaSlideIndex);
+    const current=(i===n-1);
     const foto=x.foto
-      ? '<img class="kepala-slide-photo" src="'+kepalaEsc(x.foto)+'" alt="Foto '+kepalaEsc(x.nama)+'">'
-      : '<div class="kepala-slide-placeholder">'+kepalaEsc(kepalaInitial(x.nama))+'</div>';
-    const current=(i===kepalaHistoryData.length-1);
-    return '<article class="kepala-slide '+(i===kepalaSlideIndex?'active':'')+'">'+
+      ? '<img class="kepala-slide-photo" src="'+kepalaEsc(x.foto)+'" alt="Foto '+kepalaEsc(x.nama)+'" decoding="async">'
+      : '<div class="kepala-slide-placeholder" aria-hidden="true">'+kepalaEsc(kepalaInitial(x.nama))+'</div>';
+    const masa=x.masa?'<p class="masa">'+KEPALA_ICON_CAL+'<span>'+kepalaEsc(x.masa)+'</span></p>':'';
+    return '<article class="kepala-slide'+(active?' active':'')+'" role="group" aria-roledescription="slide" aria-label="'+(i+1)+' dari '+n+'"'+(active?'':' aria-hidden="true"')+'>'+
       '<div class="kepala-slide-card">'+
-        '<div>'+foto+'</div>'+
-        '<div class="kepala-slide-content">'+
-          '<div class="kepala-slide-number">KEPALA KUA KE-'+(i+1)+'</div>'+
-          '<h4>'+kepalaEsc(x.nama)+(current?'<span class="kepala-current-large">SAAT INI</span>':'')+'</h4>'+
-          '<span class="masa">▣ &nbsp; '+kepalaEsc(x.masa)+'</span>'+
-          '<p>'+kepalaEsc(x.keterangan||'Riwayat kepemimpinan KUA Kecamatan Cipeundeuy.')+'</p>'+
+        '<div class="kepala-photo">'+foto+'</div>'+
+        '<div class="kepala-head">'+
+          '<p class="kepala-order">Kepala KUA ke-'+(i+1)+(current?'<span class="kepala-current-large">Menjabat saat ini</span>':'')+'</p>'+
+          '<h4>'+kepalaEsc(x.nama)+'</h4>'+
+          masa+
         '</div>'+
+        '<p class="kepala-note">'+kepalaEsc(x.keterangan||'Riwayat kepemimpinan KUA Kecamatan Cipeundeuy.')+'</p>'+
       '</div>'+
     '</article>';
   }).join('');
   if(dots){
     dots.innerHTML=kepalaHistoryData.map((x,i)=>
-      '<button class="kepala-slider-dot '+(i===kepalaSlideIndex?'active':'')+'" type="button" aria-label="Slide '+(i+1)+'" onclick="goKepalaSlide('+i+')"></button>'
+      '<button class="kepala-slider-dot '+(i===kepalaSlideIndex?'active':'')+'" type="button" aria-label="Kepala KUA ke-'+(i+1)+': '+kepalaEsc(x.nama)+'" onclick="goKepalaSlide('+i+')"></button>'
     ).join('');
   }
   kepalaStartAuto();
 }
-function updateKepalaSlider(){
-  const slides=document.querySelectorAll('#kepalaHistoryBody .kepala-slide');
-  slides.forEach((s,i)=>s.classList.toggle('active',i===kepalaSlideIndex));
-  document.querySelectorAll('#kepalaSliderDots .kepala-slider-dot').forEach((d,i)=>d.classList.toggle('active',i===kepalaSlideIndex));
+function kepalaProgressRestart(){
   const p=document.getElementById('kepalaSliderProgress');
-  if(p){p.style.transition='none';p.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{p.style.transition='width 5s linear';p.style.width='100%';})});}
+  if(!p)return;
+  p.style.transition='none';p.style.width='0%';
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{p.style.transition='width '+(KEPALA_AUTO_MS/1000)+'s linear';p.style.width='100%';})});
+}
+function updateKepalaSlider(){
+  document.querySelectorAll('#kepalaHistoryBody .kepala-slide').forEach((s,i)=>{
+    const on=(i===kepalaSlideIndex);
+    s.classList.toggle('active',on);
+    if(on)s.removeAttribute('aria-hidden');else s.setAttribute('aria-hidden','true');
+  });
+  document.querySelectorAll('#kepalaSliderDots .kepala-slider-dot').forEach((d,i)=>d.classList.toggle('active',i===kepalaSlideIndex));
 }
 function goKepalaSlide(i){
   if(!Array.isArray(kepalaHistoryData)||kepalaHistoryData.length<2)return;
@@ -2505,13 +2574,17 @@ function goKepalaSlide(i){
 function kepalaSlideNext(){goKepalaSlide(kepalaSlideIndex+1)}
 function kepalaSlidePrev(){goKepalaSlide(kepalaSlideIndex-1)}
 function kepalaStartAuto(){
-  if(kepalaSlideTimer)clearInterval(kepalaSlideTimer);
+  if(kepalaSlideTimer){clearInterval(kepalaSlideTimer);kepalaSlideTimer=null;}
   if(!Array.isArray(kepalaHistoryData)||kepalaHistoryData.length<2)return;
-  kepalaSlideTimer=setInterval(()=>goKepalaSlide(kepalaSlideIndex+1),5000);
-  const p=document.getElementById('kepalaSliderProgress');
-  if(p){p.style.transition='none';p.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{p.style.transition='width 5s linear';p.style.width='100%';})});}
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  kepalaSlideTimer=setInterval(()=>goKepalaSlide(kepalaSlideIndex+1),KEPALA_AUTO_MS);
+  kepalaProgressRestart();
 }
-function kepalaStopAuto(){if(kepalaSlideTimer){clearInterval(kepalaSlideTimer);kepalaSlideTimer=null;}}
+function kepalaStopAuto(){
+  if(kepalaSlideTimer){clearInterval(kepalaSlideTimer);kepalaSlideTimer=null;}
+  const p=document.getElementById('kepalaSliderProgress');
+  if(p){p.style.transition='none';p.style.width='0%';}
+}
 
 function openKepalaAdmin(){
   if(typeof adminSessionIsActive==='function'&&!adminSessionIsActive()){if(typeof openAdminLogin==='function')openAdminLogin();return}
@@ -2626,6 +2699,20 @@ document.addEventListener('DOMContentLoaded',function(){
   if(!s)return;
   s.addEventListener('mouseenter',kepalaStopAuto);
   s.addEventListener('mouseleave',kepalaStartAuto);
+  s.addEventListener('focusin',kepalaStopAuto);
+  s.addEventListener('focusout',kepalaStartAuto);
+  s.addEventListener('keydown',function(e){
+    if(e.key==='ArrowLeft')kepalaSlidePrev();
+    else if(e.key==='ArrowRight')kepalaSlideNext();
+  });
+  let x0=null,y0=null;
+  s.addEventListener('touchstart',function(e){const t=e.touches[0];x0=t.clientX;y0=t.clientY;},{passive:true});
+  s.addEventListener('touchend',function(e){
+    if(x0===null)return;
+    const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
+    x0=y0=null;
+    if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?kepalaSlideNext():kepalaSlidePrev();}
+  },{passive:true});
 });
 
 </script>
