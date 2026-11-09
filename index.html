@@ -1309,7 +1309,7 @@ body.admin-mode .gallery-admin-public-action{display:block}
 </section>
 
 <section id="galeri" class="page sand-page">
-  <div class="section-title"><div class="kicker">Layanan Data KUA Cipeundeuy</div><h2>Data Pernikahan</h2><p class="lead">Statistik pencatatan nikah dan pencarian arsip digital khusus petugas.</p></div>
+  <div class="section-title"><div class="kicker">Layanan Data KUA Cipeundeuy</div><h2>Data Pernikahan</h2><p class="lead">Statistik agregat pencatatan nikah untuk umum dan pencarian arsip digital khusus petugas.</p></div>
   <div class="sand-overview">
     <div class="sand-metric"><small>Total arsip digital</small><strong id="sandTotalCount">Memuat…</strong><span id="sandTotalNote">Jumlah otomatis dari database arsip</span></div>
     <div class="sand-metric"><small>Periode data utama</small><strong id="sandYearPeriod">Memuat…</strong><span id="sandPeriodNote">Berdasarkan tahun indeks yang tersedia</span></div>
@@ -2811,30 +2811,40 @@ document.addEventListener('DOMContentLoaded',()=>{loadGalleryPublic();});
 <script id="sand-scripts">
 let SAND_YEAR_COUNTS=[];
 async function sandLoadStats(){
- const totalEl=document.getElementById('sandTotalCount'),periodEl=document.getElementById('sandYearPeriod'),statusEl=document.getElementById('sandChartStatus'),chart=document.getElementById('sandYearChart');
+ const totalEl=document.getElementById('sandTotalCount');
+ const periodEl=document.getElementById('sandYearPeriod');
+ const statusEl=document.getElementById('sandChartStatus');
+ const chart=document.getElementById('sandYearChart');
  if(!chart)return;
  if(statusEl)statusEl.textContent='Memuat data…';
  try{
-  // Hitung seluruh baris, bukan hanya batas default 1.000 baris Supabase.
-  const {count,error:countError}=await supabaseClient.from('sand_arsip_nikah').select('id_arsip',{count:'exact',head:true});
-  if(countError)throw countError;
-  const counts=new Map();let offset=0,batchSize=1000;
-  while(true){
-   const {data,error}=await supabaseClient.from('sand_arsip_nikah').select('tahun_indeks').not('tahun_indeks','is',null).order('tahun_indeks',{ascending:true}).range(offset,offset+batchSize-1);
-   if(error)throw error;
-   for(const row of (data||[])){const year=Number(row.tahun_indeks);if(Number.isInteger(year)&&year>0)counts.set(year,(counts.get(year)||0)+1);}
-   if(!data||data.length<batchSize)break;
-   offset+=batchSize;
-  }
-  SAND_YEAR_COUNTS=[...counts.entries()].sort((a,b)=>a[0]-b[0]);
-  if(totalEl)totalEl.textContent=Number(count||0).toLocaleString('id-ID');
+  // Gunakan RPC khusus publik; tidak membaca tabel arsip secara langsung.
+  // Fungsi SQL hanya mengembalikan agregat total dan jumlah per tahun.
+  const {data,error}=await supabaseClient.rpc('sand_arsip_statistik_public');
+  if(error)throw error;
+  if(!data || typeof data!=='object')throw new Error('Respons statistik publik tidak valid.');
+
+  const total=Number(data.total_arsip ?? 0);
+  const perTahun=Array.isArray(data.per_tahun)?data.per_tahun:[];
+  SAND_YEAR_COUNTS=perTahun
+   .map(item=>[Number(item.tahun),Number(item.jumlah)])
+   .filter(([year,count])=>Number.isInteger(year)&&year>0&&Number.isFinite(count)&&count>=0)
+   .sort((a,b)=>a[0]-b[0]);
+
+  if(totalEl)totalEl.textContent=total.toLocaleString('id-ID');
   if(periodEl){
-   periodEl.textContent=SAND_YEAR_COUNTS.length?`${SAND_YEAR_COUNTS[0][0]}–${SAND_YEAR_COUNTS[SAND_YEAR_COUNTS.length-1][0]}`:'Belum tersedia';
+   periodEl.textContent=SAND_YEAR_COUNTS.length
+    ?`${SAND_YEAR_COUNTS[0][0]}–${SAND_YEAR_COUNTS[SAND_YEAR_COUNTS.length-1][0]}`
+    :'Belum tersedia';
   }
   const periodNote=document.getElementById('sandPeriodNote');
-  if(periodNote)periodNote.textContent=SAND_YEAR_COUNTS.length?`${SAND_YEAR_COUNTS.reduce((n,x)=>n+x[1],0).toLocaleString('id-ID')} arsip memiliki tahun indeks`:'Belum ada arsip dengan tahun indeks.';
+  const totalTahun=SAND_YEAR_COUNTS.reduce((n,x)=>n+x[1],0);
+  if(periodNote)periodNote.textContent=SAND_YEAR_COUNTS.length
+   ?`${totalTahun.toLocaleString('id-ID')} arsip memiliki tahun indeks`
+   :'Belum ada arsip dengan tahun indeks.';
   const totalNote=document.getElementById('sandTotalNote');
   if(totalNote)totalNote.textContent='Total seluruh arsip yang tersimpan di database';
+
   sandDrawChart();
   if(statusEl)statusEl.textContent='Data terbaru';
   const note=document.getElementById('sandStatsNote');
@@ -2843,8 +2853,8 @@ async function sandLoadStats(){
   if(totalEl)totalEl.textContent='—';
   if(periodEl)periodEl.textContent='—';
   if(statusEl)statusEl.textContent='Gagal memuat';
-  chart.textContent='Statistik belum dapat dimuat: '+(error.message||'periksa koneksi database dan izin akses.');
-  console.error('SAND statistik:',error);
+  chart.textContent='Statistik belum dapat dimuat: '+(error.message||'periksa fungsi statistik publik dan izin akses Supabase.');
+  console.error('SAND statistik publik:',error);
  }
 }
 function sandDrawChart(){
