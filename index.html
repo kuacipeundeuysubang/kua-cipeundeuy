@@ -1311,10 +1311,10 @@ body.admin-mode .gallery-admin-public-action{display:block}
 <section id="galeri" class="page sand-page">
   <div class="section-title"><div class="kicker">Layanan Data KUA Cipeundeuy</div><h2>Data Pernikahan</h2><p class="lead">Statistik pencatatan nikah dan pencarian arsip digital khusus petugas.</p></div>
   <div class="sand-overview">
-    <div class="sand-metric"><small>Total arsip digital</small><strong>4.255</strong><span>Data impor awal, belum seluruhnya diverifikasi</span></div>
-    <div class="sand-metric"><small>Periode data utama</small><strong>2013–2023</strong><span>Arsip 1994–2012 dalam proses pelengkapan</span></div>
+    <div class="sand-metric"><small>Total arsip digital</small><strong id="sandTotalCount">Memuat…</strong><span id="sandTotalNote">Jumlah otomatis dari database arsip</span></div>
+    <div class="sand-metric"><small>Periode data utama</small><strong id="sandYearPeriod">Memuat…</strong><span id="sandPeriodNote">Berdasarkan tahun indeks yang tersedia</span></div>
   </div>
-  <div class="sand-panel"><div class="sand-panel-head"><div><h3>Grafik Jumlah Pernikahan per Tahun</h3><p>Ringkasan berdasarkan tahun indeks arsip yang tersedia. Angka dapat berubah setelah verifikasi.</p></div><span class="sand-chip">Data sementara</span></div><div id="sandYearChart" class="sand-chart" role="img" aria-label="Grafik arsip pernikahan per tahun"></div><p class="sand-footnote">Tahun yang belum lengkap tidak ditampilkan sebagai nol. Statistik bukan angka resmi final.</p></div>
+  <div class="sand-panel"><div class="sand-panel-head"><div><h3>Grafik Jumlah Pernikahan per Tahun</h3><p>Ringkasan berdasarkan tahun indeks arsip yang tersedia. Angka dapat berubah setelah verifikasi.</p></div><span class="sand-chip" id="sandChartStatus">Memuat data…</span></div><div id="sandYearChart" class="sand-chart" role="img" aria-label="Grafik arsip pernikahan per tahun"></div><p class="sand-footnote" id="sandStatsNote">Grafik dan jumlah arsip diperbarui otomatis dari database setelah data ditambahkan atau diimpor.</p></div>
   <div class="sand-panel sand-private" id="sandAdminPanel" hidden><div class="sand-panel-head"><div><h3><span aria-hidden="true">⌕</span> Pencarian Arsip Nikah</h3><p>Hanya untuk admin SAND yang telah mendapat izin akses.</p></div><span class="sand-chip">Internal</span></div>
   <div class="sand-search-row"><input id="sandKeyword" type="search" placeholder="Nama suami, nama istri, atau nomor akta..." autocomplete="off" aria-label="Kata kunci pencarian arsip"><select id="sandYear" aria-label="Filter tahun"><option value="">Semua tahun</option></select><button type="button" id="sandSearchBtn" onclick="sandSearch()">⌕ Cari</button></div>
   <div class="sand-tools"><button type="button" onclick="sandOpenForm()">＋ Tambah Arsip</button><button type="button" onclick="sandToggleImport()">⇧ Impor Excel SIMKAH</button><label><input type="checkbox" id="sandOnlyIncomplete"> Hanya data belum lengkap</label><button type="button" class="sand-muted" onclick="sandSearch()">↻ Muat data</button></div>
@@ -2809,8 +2809,56 @@ document.addEventListener('DOMContentLoaded',()=>{loadGalleryPublic();});
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script id="sand-scripts">
-const SAND_YEAR_COUNTS=[[2013, 452], [2014, 423], [2015, 427], [2016, 418], [2017, 412], [2018, 486], [2019, 375], [2020, 288], [2021, 351], [2022, 322], [2023, 299]];
-function sandDrawChart(){const root=document.getElementById('sandYearChart');if(!root)return;const max=Math.max(...SAND_YEAR_COUNTS.map(x=>x[1]),1);root.replaceChildren();SAND_YEAR_COUNTS.forEach(([year,count])=>{const col=document.createElement('div');col.className='sand-col';const val=document.createElement('span');val.className='sand-value';val.textContent=count.toLocaleString('id-ID');const bar=document.createElement('div');bar.className='sand-bar';bar.style.height=Math.max(4,Math.round(count/max*190))+'px';bar.title=year+': '+count+' arsip';const label=document.createElement('span');label.className='sand-label';label.textContent=year;col.append(val,bar,label);root.append(col);});}
+let SAND_YEAR_COUNTS=[];
+async function sandLoadStats(){
+ const totalEl=document.getElementById('sandTotalCount'),periodEl=document.getElementById('sandYearPeriod'),statusEl=document.getElementById('sandChartStatus'),chart=document.getElementById('sandYearChart');
+ if(!chart)return;
+ if(statusEl)statusEl.textContent='Memuat data…';
+ try{
+  // Hitung seluruh baris, bukan hanya batas default 1.000 baris Supabase.
+  const {count,error:countError}=await supabaseClient.from('sand_arsip_nikah').select('id_arsip',{count:'exact',head:true});
+  if(countError)throw countError;
+  const counts=new Map();let offset=0,batchSize=1000;
+  while(true){
+   const {data,error}=await supabaseClient.from('sand_arsip_nikah').select('tahun_indeks').not('tahun_indeks','is',null).order('tahun_indeks',{ascending:true}).range(offset,offset+batchSize-1);
+   if(error)throw error;
+   for(const row of (data||[])){const year=Number(row.tahun_indeks);if(Number.isInteger(year)&&year>0)counts.set(year,(counts.get(year)||0)+1);}
+   if(!data||data.length<batchSize)break;
+   offset+=batchSize;
+  }
+  SAND_YEAR_COUNTS=[...counts.entries()].sort((a,b)=>a[0]-b[0]);
+  if(totalEl)totalEl.textContent=Number(count||0).toLocaleString('id-ID');
+  if(periodEl){
+   periodEl.textContent=SAND_YEAR_COUNTS.length?`${SAND_YEAR_COUNTS[0][0]}–${SAND_YEAR_COUNTS[SAND_YEAR_COUNTS.length-1][0]}`:'Belum tersedia';
+  }
+  const periodNote=document.getElementById('sandPeriodNote');
+  if(periodNote)periodNote.textContent=SAND_YEAR_COUNTS.length?`${SAND_YEAR_COUNTS.reduce((n,x)=>n+x[1],0).toLocaleString('id-ID')} arsip memiliki tahun indeks`:'Belum ada arsip dengan tahun indeks.';
+  const totalNote=document.getElementById('sandTotalNote');
+  if(totalNote)totalNote.textContent='Total seluruh arsip yang tersimpan di database';
+  sandDrawChart();
+  if(statusEl)statusEl.textContent='Data terbaru';
+  const note=document.getElementById('sandStatsNote');
+  if(note)note.textContent='Diperbarui otomatis dari database. Arsip tanpa tahun indeks tetap masuk total arsip, tetapi tidak masuk grafik.';
+ }catch(error){
+  if(totalEl)totalEl.textContent='—';
+  if(periodEl)periodEl.textContent='—';
+  if(statusEl)statusEl.textContent='Gagal memuat';
+  chart.textContent='Statistik belum dapat dimuat: '+(error.message||'periksa koneksi database dan izin akses.');
+  console.error('SAND statistik:',error);
+ }
+}
+function sandDrawChart(){
+ const root=document.getElementById('sandYearChart');if(!root)return;root.replaceChildren();
+ if(!SAND_YEAR_COUNTS.length){root.textContent='Belum ada data tahun indeks untuk ditampilkan.';return;}
+ const max=Math.max(...SAND_YEAR_COUNTS.map(x=>x[1]),1);
+ SAND_YEAR_COUNTS.forEach(([year,count])=>{
+  const col=document.createElement('div');col.className='sand-col';
+  const val=document.createElement('span');val.className='sand-value';val.textContent=count.toLocaleString('id-ID');
+  const bar=document.createElement('div');bar.className='sand-bar';bar.style.height=Math.max(4,Math.round(count/max*190))+'px';bar.title=year+': '+count.toLocaleString('id-ID')+' arsip';
+  const label=document.createElement('span');label.className='sand-label';label.textContent=year;
+  col.append(val,bar,label);root.append(col);
+ });
+}
 async function sandHasAccess(){try{const {data:ud,error:ue}=await supabaseClient.auth.getUser();if(ue||!ud?.user)return false;const {data,error}=await supabaseClient.from('sand_admins').select('user_id').eq('user_id',ud.user.id).maybeSingle();return !error&&!!data;}catch(e){return false;}}
 async function sandRefreshAccess(){const panel=document.getElementById('sandAdminPanel'),hint=document.getElementById('sandLoginHint');if(!panel||!hint)return;const authenticated=typeof adminSessionIsActive==='function'&&adminSessionIsActive();const allow=authenticated&&await sandHasAccess();panel.hidden=!allow;hint.hidden=allow;const hintText=hint.querySelector('p');if(hintText)hintText.textContent=authenticated&&!allow?'Akun ini belum diberi hak akses SAND. Hubungi pengelola untuk mendapatkan izin.':'Pencarian nama dan nomor akta hanya tersedia bagi admin yang telah mendapat izin. Pengunjung umum hanya melihat statistik.';hint.querySelector('button').hidden=authenticated;}
 let sandEditingId=null;
@@ -2857,11 +2905,11 @@ async function sandSave(event){event.preventDefault();const state=sandField('san
  try{let result;if(sandEditingId){result=await supabaseClient.from('sand_arsip_nikah').update(payload).eq('id_arsip',sandEditingId).select('id_arsip').single();}
  else{payload.id_arsip='SAND-'+crypto.randomUUID();result=await supabaseClient.from('sand_arsip_nikah').insert(payload).select('id_arsip').single();}
  if(result.error)throw result.error;
- state.textContent='Data berhasil disimpan dan perubahan tercatat.';setTimeout(()=>{sandCloseForm();sandSearch()},350);
+ state.textContent='Data berhasil disimpan dan perubahan tercatat.';await sandLoadStats();setTimeout(()=>{sandCloseForm();sandSearch()},350);
  }catch(e){state.textContent='Gagal menyimpan: '+(e.message||e);}finally{btn.disabled=false;}
 }
 
-document.addEventListener('DOMContentLoaded',()=>{sandDrawChart();const select=document.getElementById('sandYear');for(let y=2026;y>=1994;y--){const opt=document.createElement('option');opt.value=y;opt.textContent=y;select.append(opt)}document.getElementById('sandKeyword')?.addEventListener('keydown',e=>{if(e.key==='Enter')sandSearch()});sandRefreshAccess();});
+document.addEventListener('DOMContentLoaded',()=>{sandLoadStats();const select=document.getElementById('sandYear');for(let y=2026;y>=1994;y--){const opt=document.createElement('option');opt.value=y;opt.textContent=y;select.append(opt)}document.getElementById('sandKeyword')?.addEventListener('keydown',e=>{if(e.key==='Enter')sandSearch()});sandRefreshAccess();});
 // SAND rechecks access when navigating and when the browser auth state changes.
 if(typeof supabaseClient!=='undefined'){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(sandRefreshAccess,0)});}
 const sandOriginalShowPage=showPage;showPage=function(id){sandOriginalShowPage(id);if(id==='galeri')sandRefreshAccess();};
@@ -2938,7 +2986,7 @@ async function sandConfirmImport(){
  if((saved+failed+skipped)%10===0)state.textContent=`Menyimpan… berhasil ${saved}, gagal ${failed}, dilewati ${skipped}`;
  }
  state.textContent=`Selesai: ${saved} berhasil, ${skipped} duplikat dilewati, ${failed} gagal.${firstError?' Kesalahan pertama: '+firstError:''} Silakan periksa data di pencarian.`;
- sandRenderImportPreview();if(saved)await sandSearch();
+ sandRenderImportPreview();if(saved){await sandLoadStats();await sandSearch();}
  }catch(e){state.textContent='Impor terhenti: '+(e.message||e)+`. ${saved} baris sudah berhasil disimpan.`;}
  finally{sandImportInProgress=false;btn.disabled=true;}
 }
