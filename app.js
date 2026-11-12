@@ -94,3 +94,10 @@ try{const r=await fetch('./data.json');if(r.ok)data=await r.json()}catch{}render
 for(const [table,query] of [['pegawai_kua','select=nama,jabatan,foto_url,urutan,aktif&aktif=eq.true&order=urutan.asc'],['kepala_kua','select=nama,masa,keterangan,foto_url,urutan&aktif=eq.true&order=urutan.asc']]){api(table,query).then(rows=>{data[table]=rows;if(table==='pegawai_kua'&&route==='pegawai')document.getElementById('employeeGrid').innerHTML=peopleMarkup(rows);if(table==='kepala_kua'&&route==='profil')document.getElementById('leadershipGrid').innerHTML=leadershipMarkup();}).catch(()=>{})}
 
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView()});
+
+// Gulir ke atas tanpa mengubah rute halaman.
+const backTop=document.querySelector('.footer-backtop');
+backTop?.addEventListener('click',()=>{
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ window.scrollTo({top:0,behavior:reduced?'instant':'smooth'});
+});
