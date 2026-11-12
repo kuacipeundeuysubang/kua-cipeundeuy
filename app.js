@@ -95,9 +95,19 @@ for(const [table,query] of [['pegawai_kua','select=nama,jabatan,foto_url,urutan,
 
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView()});
 
-// Gulir ke atas tanpa mengubah rute halaman.
-const backTop=document.querySelector('.footer-backtop');
-backTop?.addEventListener('click',()=>{
- const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- window.scrollTo({top:0,behavior:reduced?'instant':'smooth'});
-});
+// Tombol mengambang mengikuti layar tanpa mengubah rute halaman.
+const backTop=document.querySelector('.back-to-top');
+if(backTop){
+ const updateBackTop=()=>{backTop.hidden=window.scrollY<320;};
+ let backTopFrame=false;
+ const scheduleBackTop=()=>{if(backTopFrame)return;backTopFrame=true;requestAnimationFrame(()=>{backTopFrame=false;updateBackTop();});};
+ window.addEventListener('scroll',scheduleBackTop,{passive:true});
+ window.addEventListener('pageshow',updateBackTop);
+ window.addEventListener('hashchange',scheduleBackTop);
+ backTop.addEventListener('click',()=>{
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  main.focus({preventScroll:true});
+  window.scrollTo({top:0,behavior:reduced?'instant':'smooth'});
+ });
+ updateBackTop();
+}

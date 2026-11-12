@@ -215,10 +215,12 @@ html[data-theme="dark"] .help-strip{background:#192a22}
 html[data-theme="dark"] .privacy-copy p{color:#b9ccc0}
 html[data-theme="dark"] .header,html[data-theme="dark"] .bottom-nav{background:#15261ff5}html[data-theme="dark"] .direct-home,html[data-theme="dark"] .catalog-page,html[data-theme="dark"] .profile-page,html[data-theme="dark"] .nikah-guide-content{background:#101b16}html[data-theme="dark"] .button:not(.outline),html[data-theme="dark"] .tab.active,html[data-theme="dark"] .category-filter.active{background:#286149;color:#fff}html[data-theme="dark"] .button.outline{color:#c5e4d0;border-color:#6c987d}html[data-theme="dark"] input,html[data-theme="dark"] select,html[data-theme="dark"] textarea{color:var(--ink);background:#14231c;border-color:var(--line)}html[data-theme="dark"] .privacy-copy p{color:#b9ccc0}html[data-theme="dark"] .brand.light strong{color:#fff}html[data-theme="dark"] .catalog-card:hover{background:#243d30}html[data-theme="dark"] dialog{color:var(--ink);background:#192a22}html[data-theme="dark"] ::backdrop{background:#000a}@media(max-width:700px){.utility .container{gap:8px}.theme-toggle{padding:2px 7px;min-height:32px;font-size:10px}.utility .container>span:first-child{font-size:8px;letter-spacing:.4px}}
 
-/* Tombol kembali ke atas: responsif terhadap interaksi dan pilihan gerak. */
-.official-footer .footer-backtop{width:44px;height:44px;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s;box-shadow:0 0 0 0 #d5b87800}
-.official-footer .footer-backtop svg{animation:backtop-arrow 2.4s ease-in-out infinite}
-.official-footer .footer-backtop:hover,.official-footer .footer-backtop:focus-visible{background:#ffffff20;border-color:#d5b878;box-shadow:0 0 0 5px #d5b87815;color:#f5d99b}
-.official-footer .footer-backtop:active{background:#ffffff30}
+/* Tombol mengambang di atas navigasi ponsel. */
+.back-to-top{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:24px;z-index:30;display:grid;place-items:center;width:46px;height:46px;padding:0;border:1px solid #7ba489;border-radius:50%;background:#164e3b;color:#fff;cursor:pointer;box-shadow:0 5px 18px #0003;transition:background .2s,box-shadow .2s}
+.back-to-top svg{width:21px;height:21px;transform:rotate(-90deg);animation:backtop-arrow 2.4s ease-in-out infinite}
+.back-to-top:hover,.back-to-top:focus-visible{background:#287052;box-shadow:0 5px 22px #0005}
+.back-to-top:active{background:#113e30}
+html[data-theme="dark"] .back-to-top{background:#285c43;color:#f1f9f4;border-color:#a7c6b0}
 @keyframes backtop-arrow{0%,70%,100%{transform:translateY(0) rotate(-90deg)}35%{transform:translateY(-4px) rotate(-90deg)}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.official-footer .footer-backtop{transition:none}.official-footer .footer-backtop svg{animation:none}}
+@media(max-width:700px){.back-to-top{right:max(16px,env(safe-area-inset-right));bottom:calc(86px + env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.back-to-top{transition:none}.back-to-top svg{animation:none}}
