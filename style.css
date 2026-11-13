@@ -224,7 +224,3 @@ html[data-theme="dark"] .back-to-top{background:#285c43;color:#f1f9f4;border-col
 @keyframes backtop-arrow{0%,70%,100%{transform:translateY(0) rotate(-90deg)}35%{transform:translateY(-4px) rotate(-90deg)}}
 @media(max-width:700px){.back-to-top{right:max(16px,env(safe-area-inset-right));bottom:calc(86px + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.back-to-top{transition:none}.back-to-top svg{animation:none}}
-
-/* Kontrol unduh dan berbagi pengumuman nikah */
-.announcement-action-status{font-size:12px!important;margin-top:12px!important;min-height:1.2em;color:var(--green)!important}
-.dialog-actions button:disabled{opacity:.6;cursor:progress}
