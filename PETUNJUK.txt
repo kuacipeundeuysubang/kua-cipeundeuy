@@ -1,0 +1,25 @@
+PEMBARUAN TAHUN INDEKS DAN TANGGAL AKAD
+
+Unggah lima file di paket ini ke folder utama repositori GitHub:
+excel-import.js, excel-worker.js, excel-update.js, excel-update-core.js, admin.css.
+Lalu Commit changes. Tidak perlu SQL baru.
+
+CARA PAKAI
+1. Simpan Excel hasil ekspor asli sebagai salinan sebelum mengedit.
+2. Lengkapi Tahun Indeks dan/atau Tanggal Akad pada salinan Excel.
+3. Pertahankan ID Arsip dan judul kolom. Jangan mengubah ID menjadi angka.
+4. Di admin, buka Impor Excel lalu klik Perbarui tahun / tanggal data lama.
+5. Pilih Tahun Indeks dan Tanggal Akad, tahun saja, atau tanggal saja.
+6. Pilih file, klik Periksa & pratinjau, lalu periksa lama -> baru.
+7. Centang konfirmasi dan klik Simpan pembaruan.
+
+Sel kosong tidak menghapus data. Tahun tidak diubah otomatis dari tanggal.
+ID tidak ditemukan tidak dibuat sebagai arsip baru. ID ganda ditolak.
+Nama, nomor akta, alamat, status verifikasi, dan foto tidak diubah.
+Jika kolom identitas diisi, nilainya harus cocok dengan data asal.
+Format tanggal: YYYY-MM-DD, DD/MM/YYYY, atau sel tanggal Excel.
+Tahun: 1900-2100. Maksimal 5.000 baris / 8 MB per file.
+Ekspor boleh lebih dari 5.000 baris; pecah menjadi beberapa file dengan judul kolom yang sama.
+Jika proses terhenti, sebagian perubahan mungkin sudah tersimpan.
+Klik Periksa & pratinjau lagi sebelum mencoba ulang; baris yang sama akan dilewati bila sudah sesuai.
+Buka ulang/segarkan halaman statistik setelah selesai memperbarui.
