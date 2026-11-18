@@ -8,3 +8,8 @@
 .settings-intro h2{font-size:32px;margin:0 0 15px}.settings-intro p,.settings-note{font-size:12px;line-height:1.9;color:#617666}.settings-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0}.settings-checkbox{display:flex!important;align-items:center;gap:12px!important}.settings-checkbox input{width:18px!important;height:18px!important}.admin-fields textarea{white-space:pre-wrap}.settings-intro{max-width:760px}#settingsStatus{white-space:pre-wrap}.admin-fields label small{line-height:1.8}.admin-sidebar nav{max-height:70vh;overflow:auto}@media(max-width:750px){.settings-tabs{gap:8px}.settings-tabs .button{font-size:11px;padding:10px}.settings-intro h2{font-size:28px}.admin-sidebar nav{max-height:none}}
 
 #excelUpdateDialog{width:min(1100px,96vw);max-height:90vh;overflow:auto;border:1px solid #cbd9cd;border-radius:12px;padding:28px}#excelUpdateDialog select{display:block;max-width:100%;padding:10px;margin:10px 0}#excelUpdateDialog td{overflow-wrap:anywhere}#updateState{margin:18px 0}#excelUpdateDialog .form-help{line-height:1.8}
+
+/* Tautan modul biodata: kontras setara menu sidebar lainnya. */
+.admin-sidebar nav>a.button.outline{display:flex;align-items:center;justify-content:flex-start;text-align:left;color:#fff!important;background:#ffffff0a;border:1px solid #ffffff45;border-radius:6px;padding:14px 16px;font-size:14px;font-weight:600;line-height:1.6;min-height:54px;width:100%;letter-spacing:0;text-decoration:none;box-shadow:none;gap:8px}
+.admin-sidebar nav>a.button.outline:hover,.admin-sidebar nav>a.button.outline:focus-visible{color:#143f32!important;background:#eaf0df;border-color:#eaf0df}
+@media(max-width:750px){.admin-sidebar nav>a.button.outline{width:auto;flex:0 0 auto;white-space:nowrap;min-height:44px;padding:11px;font-size:12px}}
