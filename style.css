@@ -230,3 +230,16 @@ html[data-theme="dark"] .back-to-top{background:#285c43;color:#f1f9f4;border-col
 
 /* Delapan fungsi KUA — Kepdirjen 888/2026 */
 .function-group{margin:0 0 2.5rem;min-width:0}.function-group>header{margin:0 0 1.2rem;max-width:58rem}.function-group h2{font-size:clamp(1.2rem,2.5vw,1.65rem);line-height:1.45;margin:.5rem 0;overflow-wrap:anywhere}.function-office{padding:1.5rem;border:1px solid var(--line,#cdd7cd);border-radius:14px;background:var(--surface,transparent);max-width:60rem}.function-office p{line-height:1.7;margin:0 0 1rem}.category-filter{white-space:normal;text-align:left}.category-filter span{white-space:nowrap}@media(max-width:600px){.function-group{margin-bottom:2rem}.function-office{padding:1rem}.category-filter{max-width:100%}}
+
+/* Accessible, single-open service functions */
+.function-accordion{border:1px solid var(--line);border-radius:14px;margin:0 0 1rem;background:var(--white);overflow:hidden;color:var(--ink)}
+.function-accordion>summary{list-style:none;display:flex;align-items:center;gap:1rem;padding:1.25rem;cursor:pointer;min-height:88px}
+.function-accordion>summary::-webkit-details-marker{display:none}.function-accordion>summary::after{display:none!important}
+.function-symbol{display:grid;place-items:center;width:48px;height:48px;flex-shrink:0;border-radius:12px;background:var(--soft);color:var(--forest)}
+.function-label{flex:1;min-width:0}.function-label small{display:block;font-size:.875rem;color:var(--muted);margin-bottom:.2rem}.function-label strong{display:block;font-size:1.125rem;line-height:1.4;overflow-wrap:anywhere}
+.function-chevron{display:grid;place-items:center;color:var(--muted);flex-shrink:0}.function-chevron svg{transition:transform .18s}.function-accordion[open] .function-chevron svg{transform:rotate(180deg)}
+.function-accordion[open]>summary{background:var(--soft);border-bottom:1px solid var(--line)}
+.function-panel{padding:1.25rem}.function-panel h2{font-size:1rem;line-height:1.6;margin:0 0 1.25rem;font-weight:600;color:var(--muted)}
+.function-panel .function-office{border:0;padding:0}.function-panel .catalog-card{height:100%}
+@media(max-width:600px){.function-accordion>summary{padding:1rem;gap:.75rem}.function-symbol{width:40px;height:40px}.function-label strong{font-size:1rem}.function-panel{padding:1rem}.function-panel .catalog-grid{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.function-chevron svg{transition:none}}
